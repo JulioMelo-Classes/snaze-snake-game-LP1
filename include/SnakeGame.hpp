@@ -3,6 +3,8 @@
 #include <iostream>
 #include <vector>
 
+#include "Level.hpp"
+
 #include "Player.hpp"
 
 class SnakeGame{
@@ -20,6 +22,7 @@ class SnakeGame{
     private:
         //<! atributos adicione outros se quiser
         std::vector<std::string> m_maze; //<! vector contendo o labirinto atual, pode ser interpretado como uma matriz
+        std::vector<Level*> m_levels; // Vector contendo os níveis da simulação
         int m_frameCount; //<! contador de frames, usado apenas como exemplo
         std::string m_choice; //<! usado na função process_actions para guardar a escolha do usuário
         GameStates m_state; //<! guarda o estado do jogo
@@ -62,6 +65,8 @@ class SnakeGame{
         * @brief é chamada quando o jogo termina a fim de destruir/resetar elementos do estado do jogo
         **/
         void game_over();
+
+        void printLevels();
 };
 
 #endif //SnakeGame_hpp

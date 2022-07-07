@@ -1,5 +1,8 @@
 #include "SnakeGame.hpp"
+
 #include "Player.hpp"
+#include "Level.hpp"
+#include "utils.hpp"
 
 #include <iostream>
 #include <fstream>
@@ -13,7 +16,39 @@ SnakeGame::SnakeGame(string levels){
     m_levels_file=levels;
     m_choice = "";
     m_frameCount = 0;
-    initialize_game();
+
+    ifstream levelFile(m_levels_file);
+    string line;
+
+    if(levelFile.is_open()){
+        while(!levelFile.eof()){
+            getline(levelFile, line);
+            
+            vector<string> parts = split(line, ' ');
+            
+            int lines = stoi(parts[0]);
+            int columns = stoi(parts[1]);
+            int foods = stoi(parts[2]);
+            
+            Level *level = new Level(lines, columns, foods);
+
+            for(int l=0; l < lines; l++){
+                getline(levelFile, line);
+                string levelLine = "";
+                
+                for(int c=0; c < columns; c++){
+                    levelLine+=line[c];
+                }
+                
+                level->insertLine(levelLine, l);
+            }
+
+            m_levels.push_back(level);
+        }
+    }
+
+    this->printLevels();
+    //initialize_game();
 }
 
 void SnakeGame::initialize_game(){
@@ -132,5 +167,12 @@ void SnakeGame::loop(){
         update();
         render();
         wait(1000);// espera 1 segundo entre cada frame
+    }
+}
+
+void SnakeGame::printLevels(){
+    for(Level* level: m_levels){
+        level->printLevel();
+        std::cout << "_____________________________" << std::endl;
     }
 }
