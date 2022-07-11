@@ -3,6 +3,7 @@
 
 #include <vector>
 #include <string>
+using namespace std;
 
 /*Define um nível no snake game*/
 class Level{
@@ -10,6 +11,7 @@ class Level{
         int m_foods; // Quantidade de comida que o nível possui
         int m_lines; // Quantidade de linhas que o mapa do nível possui
         int m_columns; // Quantidade de colunas que o mapa do nível possui
+        int m_startLine, m_startColumn;
         std::vector<std::string> m_map; // Um vetor de strings representando o mapa do nível 
 
     public:
@@ -31,6 +33,16 @@ class Level{
         void insertLine(std::string line,int position);
 
         void printLevel(); // MÉTODO PARA TESTE
+
+        vector<string> getLevel(int lvl); // MÉTODO PARA TESTE
+
+        pair<int, int> getStartPosition();
+
+        pair<int, int> getMazeSize();
+        
+        char getElement(int l, int c);
+
+        bool allowed(std::pair<int,int> pos);
 };
 
 #endif

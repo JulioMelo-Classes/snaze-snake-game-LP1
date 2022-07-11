@@ -6,6 +6,8 @@
 #include "Level.hpp"
 
 #include "Player.hpp"
+#include "Snake.hpp"
+using namespace std;
 
 class SnakeGame{
     public:
@@ -18,22 +20,23 @@ class SnakeGame{
             WAITING_USER, //<! quando o jogo deve esperar por uma entrada do usuário o estado é WAITING_USER
             WAITING_IA //<! usualmente o jogo está esperando por comandos da IA, neste caso o estado é WAITING_IA
         };
-
     private:
-        //<! atributos adicione outros se quiser
-        std::vector<std::string> m_maze; //<! vector contendo o labirinto atual, pode ser interpretado como uma matriz
-        std::vector<Level*> m_levels; // Vector contendo os níveis da simulação
+        Snake* m_snake;
+        vector<Level*> m_levels; // Vector contendo os níveis da simulação
+
         int m_frameCount; //<! contador de frames, usado apenas como exemplo
-        std::string m_choice; //<! usado na função process_actions para guardar a escolha do usuário
+        string m_choice; //<! usado na função inputs para guardar a escolha do usuário
         GameStates m_state; //<! guarda o estado do jogo
-        std::string m_levels_file; //<! arquivo com os níveis do jogo
+        string m_levels_file; //<! arquivo com os níveis do jogo
         Player m_ia_player; //<! instancia da classe Player responsável pela IA do jogo
         int m_action; //<! Representa a ação escolhida pela IA
+
+
     public:
         /**
         * @brief construtor padrão, fique à vontade para adicionar parâmetros se desejar
         **/
-        SnakeGame(std::string levels);
+        SnakeGame(string levels);
 
         /**
         * @brief chamado no main, este loop executa o jogo indefinidamente até que o usuário escolha terminar!
@@ -44,17 +47,17 @@ class SnakeGame{
         /**
         * @brief realiza a inicialização geral do jogo, fique à vontade para adicionar parâmetros se achar que deve
         **/
-        void initialize_game();
+        void start();
+
+        /**
+        * @brief processa as entradas do jogador
+        **/
+        void inputs();
 
         /**
         * @brief atualiza o estado do jogo, basicamente movendo os objetos, sorteando novas posições de comida
         **/
         void update();
-
-        /**
-        * @brief processa as entradas do jogador
-        **/
-        void process_actions();
 
         /**
         * @brief testa o estado do jogo e desenha a tela correspondente
@@ -67,6 +70,9 @@ class SnakeGame{
         void game_over();
 
         void printLevels();
+
+        pair<int, int> generateFood(int foodCount);
+
 };
 
 #endif //SnakeGame_hpp

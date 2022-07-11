@@ -47,40 +47,30 @@ SnakeGame::SnakeGame(string levels){
         }
     }
 
+
     this->printLevels();
-    //initialize_game();
+    start();
 }
 
-void SnakeGame::initialize_game(){
-    //carrega o nivel ou os níveis
-    ifstream levelFile(m_levels_file); 
-    int lineCount = 0;
-    string line;
-    if(levelFile.is_open()){
-        while(getline(levelFile, line)){ //pega cada linha do arquivo
-            if(lineCount > 0){ //ignora a primeira linha já que ela contem informações que não são uteis para esse exemplo
-                m_maze.push_back(line);
-            }
-            lineCount++;
-        }
-    }
+void SnakeGame::start(){
+
     m_state = WAITING_USER; //estado inicial é WAITING_USER, mas poderia ser outro
+
     m_ia_player = Player();
+    cout << m_levels[0]->getStartPosition().first << "," << m_levels[0]->getStartPosition().second << endl;
+    m_snake = new Snake(m_levels[0]->getStartPosition());
 }
 
 
 
-void SnakeGame::process_actions(){
-    //processa as entradas do jogador de acordo com o estado do jogo
-    //nesse exemplo o jogo tem 3 estados, WAITING_USER, RUNNING e GAME_OVER.
-    //no caso deste trabalho temos 2 tipos de entrada, uma que vem da classe Player, como resultado do processamento da IA
-    //outra vem do próprio usuário na forma de uma entrada do teclado.
+void SnakeGame::inputs(){
     switch(m_state){
         case WAITING_USER: //o jogo bloqueia aqui esperando o usuário digitar a escolha dele
             cin>>std::ws>>m_choice;
             break;
         case WAITING_IA:
-            m_action = m_ia_player.next_move();
+            //TODO - IA ALEATORIA
+            m_action = m_ia_player.next_move(); 
             break;
         default:
             //nada pra fazer aqui
@@ -89,11 +79,40 @@ void SnakeGame::process_actions(){
 }
 
 void SnakeGame::update(){
-    //atualiza o estado do jogo de acordo com o resultado da chamada de "process_input"
+    //atualiza o estado do jogo de acordo com o resultado da chamada de "process_actions"
     switch(m_state){
         case RUNNING:
-            if(m_frameCount>0 && m_frameCount%10 == 0) //depois de 10 frames o jogo pergunta se o usuário quer continuar
-                m_state = WAITING_USER;
+            //if(m_frameCount>0 && m_frameCount%10 == 0) //depois de 10 frames o jogo pergunta se o usuário quer continuar
+            //    m_state = WAITING_USER;
+            /*atualiza a posição do pacman de acordo com a escolha*/
+            if(m_action == 0){ //up
+                m_snake->move(-1,0);
+                int linha = m_snake->getPosition().first;
+                if(linha < 0)
+                    m_snake->setPosition({0, m_snake->getPosition().second});
+            }
+            else if(m_action == 1){ //down
+                m_snake->move(1,0);
+                int linha = m_snake->getPosition().first;
+                if(linha >= m_levels[0]->getMazeSize().first)
+                    m_snake->setPosition({m_levels[0]->getMazeSize().first -1, m_snake->getPosition().second});
+            }
+            else if(m_action == 2){ //right
+                m_snake->move(0,1);
+                int coluna = m_snake->getPosition().second;
+                if(coluna >= m_levels[0]->getMazeSize().second)
+                    m_snake->setPosition({m_snake->getPosition().first,  m_levels[0]->getMazeSize().second - 1});
+            }
+            else{ //left
+                m_snake->move(0,-1);
+                int coluna = m_snake->getPosition().second;
+                if(coluna  < 0)
+                    m_snake->setPosition({m_snake->getPosition().first, 0});
+            }
+            //sempre depois de executar "running" uma vez
+            //o jogo pergunta para a IA qual sua escolha
+            if(m_state == RUNNING) //se ainda form running (não pediu para esperar pelo user)
+                m_state = WAITING_IA;
             break;
         case WAITING_USER: //se o jogo estava esperando pelo usuário então ele testa qual a escolha que foi feita
             if(m_choice == "n"){
@@ -102,12 +121,13 @@ void SnakeGame::update(){
             }
             else{
                 //pode fazer alguma coisa antes de fazer isso aqui
-                m_state = RUNNING;
+                m_state = WAITING_IA;
+                
             }
             break;
-        case WAITING_IA: //se o jogo estava esperando pelo usuário então ele testa qual a escolha que foi feita
+        case WAITING_IA: //Esperando pela IA
             /*alguma coisa aqui*/
-            m_state = RUNNING;
+            m_state = RUNNING; //depois de processar coisas da IA sempre passa para Running
             break;
         default:
             //nada pra fazer aqui
@@ -127,25 +147,31 @@ void wait(int ms){
  * @brief função auxiliar para limpar o terminal
  */
 void clearScreen(){
-//some C++ voodoo here ;D
-#if defined _WIN32
-    system("cls");
-#elif defined (__LINUX__) || defined(__gnu_linux__) || defined(__linux__)
-    system("clear");
-#elif defined (__APPLE__)
-    system("clear");
-#endif
+    //some C++ voodoo here ;D
+    #if defined _WIN32
+        system("cls");
+    #elif defined (__LINUX__) || defined(__gnu_linux__) || defined(__linux__)
+        system("clear");
+    #elif defined (__APPLE__)
+        system("clear");
+    #endif
 }
 
 void SnakeGame::render(){
-    clearScreen();
+    //clearScreen();
     switch(m_state){
         case RUNNING:
-            //desenha todas as linhas do labirinto
-            for(auto line : m_maze){
-                cout<<line<<endl;
+            for(int i=0; i<m_levels[0]->getMazeSize().first ;i++){
+                for(int j=0;j<m_levels[0]->getMazeSize().second ; j++){
+                    
+                    if(i == m_snake->getPosition().first && j == m_snake->getPosition().second)
+                        cout<<m_snake->getIcon();
+                    else
+                        cout<<m_levels[0]->getElement(i,j);
+                }
+                cout<<endl;
             }
-            cout<<"fc:"<<m_frameCount<<endl;
+            cout<<"l,c: " << m_snake->getPosition().first << "," << m_snake->getPosition().second << " fc: "<<m_frameCount<<endl;
             break;
         case WAITING_USER:
             cout<<"Você quer iniciar/continuar o jogo? (s/n)"<<endl;
@@ -163,10 +189,10 @@ void SnakeGame::game_over(){
 void SnakeGame::loop(){
     render(); //chama um render para a interface inicial
     while(m_state != GAME_OVER){
-        process_actions();
+        inputs();
         update();
         render();
-        wait(1000);// espera 1 segundo entre cada frame
+        wait(50);// espera 1 segundo entre cada frame
     }
 }
 
@@ -175,4 +201,8 @@ void SnakeGame::printLevels(){
         level->printLevel();
         std::cout << "_____________________________" << std::endl;
     }
+}
+
+pair<int, int> SnakeGame::generateFood(int foodCount){
+    return make_pair(1,1);
 }

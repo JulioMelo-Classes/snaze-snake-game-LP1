@@ -10,4 +10,5 @@ add_executable( snaze
                 src/Player.cpp
                 src/utils.cpp
                 src/main.cpp
+                src/Snake.cpp
                 )
