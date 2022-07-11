@@ -41,6 +41,13 @@ class Level{
         
         char getElement(int l, int c);
 
+        /**
+         * @brief checa se o destino da snake é valido
+         * 
+         * @param pos posicao de destino
+         * 
+         * @return resultado
+         */
         bool allowed(std::pair<int,int> pos);
 
         pair<int, int> getSpawnFruit(bool spawn);

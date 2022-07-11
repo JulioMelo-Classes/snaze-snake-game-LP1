@@ -69,8 +69,6 @@ class SnakeGame{
         **/
         void game_over();
 
-        pair<int, int> generateFood(int foodCount);
-
 };
 
 #endif //SnakeGame_hpp

@@ -17,6 +17,11 @@ class Snake{
         
         char getIcon();
 
+        /**
+         * modifica a posicao da snake com base em um par
+         * @param l linhas
+         * @param c colunas
+         **/
         void move(int l, int c);
         
 };

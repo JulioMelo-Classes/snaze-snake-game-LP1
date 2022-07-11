@@ -197,7 +197,3 @@ void SnakeGame::loop(){
         wait(50);// espera 1 segundo entre cada frame
     }
 }
-
-pair<int, int> SnakeGame::generateFood(int foodCount){
-    return make_pair(1,1);
-}
