@@ -69,8 +69,6 @@ class SnakeGame{
         **/
         void game_over();
 
-        void printLevels();
-
         pair<int, int> generateFood(int foodCount);
 
 };

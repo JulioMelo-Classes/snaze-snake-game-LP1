@@ -32,10 +32,6 @@ void Level::printLevel(){ // MÉTODO PARA TESTE
     }
 }
 
-vector<string> Level::getLevel(int lvl){
-    return m_map;
-}
-
 pair<int, int> Level::getStartPosition(){
     for(int c=0;c < m_lines;c++){
         if(m_map[c].find("V") != string::npos){
@@ -66,3 +62,14 @@ bool Level::allowed(std::pair<int,int> pos){
 
     return true;
 }
+
+pair<int, int> Level::getSpawnFruit(bool spawn){
+    if (spawn){
+        m_fruitPosition = make_pair(rand()%m_lines,rand()%m_columns);
+        while(!allowed(m_fruitPosition)){
+            m_fruitPosition = make_pair(rand()%m_lines,rand()%m_columns);
+        }
+    }
+    return m_fruitPosition;
+}
+

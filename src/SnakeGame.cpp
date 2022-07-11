@@ -46,9 +46,6 @@ SnakeGame::SnakeGame(string levels){
             m_levels.push_back(level);
         }
     }
-
-
-    this->printLevels();
     start();
 }
 
@@ -59,6 +56,7 @@ void SnakeGame::start(){
     m_ia_player = Player();
     cout << m_levels[0]->getStartPosition().first << "," << m_levels[0]->getStartPosition().second << endl;
     m_snake = new Snake(m_levels[0]->getStartPosition());
+    m_levels[0]->getSpawnFruit(true);
 }
 
 
@@ -70,7 +68,8 @@ void SnakeGame::inputs(){
             break;
         case WAITING_IA:
             //TODO - IA ALEATORIA
-            m_action = m_ia_player.next_move(); 
+            m_ia_player.find_solution(m_levels[0], m_snake);
+            m_action = m_ia_player.next_move();
             break;
         default:
             //nada pra fazer aqui
@@ -135,6 +134,35 @@ void SnakeGame::update(){
     }
 }
 
+
+void SnakeGame::render(){
+    //clearScreen();
+    switch(m_state){
+        case RUNNING:
+            for(int i=0; i<m_levels[0]->getMazeSize().first ;i++){
+                for(int j=0;j<m_levels[0]->getMazeSize().second ; j++){
+                    
+                    if(i == m_snake->getPosition().first && j == m_snake->getPosition().second)
+                        cout<<m_snake->getIcon();
+                    else if(i == m_levels[0]->getSpawnFruit(false).first && j == m_levels[0]->getSpawnFruit(false).second)
+                        cout<< "F";
+                    else
+                        cout<<m_levels[0]->getElement(i,j);
+                }
+                cout<<endl;
+            }
+            cout<<"l,c: " << m_snake->getPosition().first << "," << m_snake->getPosition().second << " fc: "<<m_frameCount<<endl;
+            break;
+        case WAITING_USER:
+            cout<<"Você quer iniciar/continuar o jogo? (s/n)"<<endl;
+            break;
+        case GAME_OVER:
+            cout<<"O jogo terminou!"<<endl;
+            break;
+    }
+    m_frameCount++;
+}
+
 /**
  * @brief função auxiliar para fazer o programa esperar por alguns milisegundos
  * @param ms a quantidade de segundos que o programa deve esperar
@@ -157,32 +185,6 @@ void clearScreen(){
     #endif
 }
 
-void SnakeGame::render(){
-    //clearScreen();
-    switch(m_state){
-        case RUNNING:
-            for(int i=0; i<m_levels[0]->getMazeSize().first ;i++){
-                for(int j=0;j<m_levels[0]->getMazeSize().second ; j++){
-                    
-                    if(i == m_snake->getPosition().first && j == m_snake->getPosition().second)
-                        cout<<m_snake->getIcon();
-                    else
-                        cout<<m_levels[0]->getElement(i,j);
-                }
-                cout<<endl;
-            }
-            cout<<"l,c: " << m_snake->getPosition().first << "," << m_snake->getPosition().second << " fc: "<<m_frameCount<<endl;
-            break;
-        case WAITING_USER:
-            cout<<"Você quer iniciar/continuar o jogo? (s/n)"<<endl;
-            break;
-        case GAME_OVER:
-            cout<<"O jogo terminou!"<<endl;
-            break;
-    }
-    m_frameCount++;
-}
-
 void SnakeGame::game_over(){
 }
 
@@ -193,13 +195,6 @@ void SnakeGame::loop(){
         update();
         render();
         wait(50);// espera 1 segundo entre cada frame
-    }
-}
-
-void SnakeGame::printLevels(){
-    for(Level* level: m_levels){
-        level->printLevel();
-        std::cout << "_____________________________" << std::endl;
     }
 }
 
