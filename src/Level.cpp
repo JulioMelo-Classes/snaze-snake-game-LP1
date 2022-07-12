@@ -42,6 +42,8 @@ void Level::setStartPosition(pair<int, int> position){m_startPosition = position
 
 pair<int, int> Level::getMazeSize(){return make_pair(m_lines, m_columns);}
 
+int Level::getFoods(){return m_foods;}
+
 char Level::getElement(int l, int c){
     return m_map.at(l).at(c);
 }

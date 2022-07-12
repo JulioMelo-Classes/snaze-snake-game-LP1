@@ -53,15 +53,28 @@ SnakeGame::SnakeGame(string levels){
 
 void SnakeGame::start(){
 
-    m_state = WAITING_USER; //estado inicial é WAITING_USER, mas poderia ser outro
+    if(this->hasValidLevels()){
+        m_state = WAITING_USER; //estado inicial é WAITING_USER, mas poderia ser outro
 
-    m_ia_player = Player();
-    cout << m_levels[0]->getStartPosition().first << "," << m_levels[0]->getStartPosition().second << endl;
-    m_snake = new Snake(m_levels[0]->getStartPosition());
-    m_levels[0]->getSpawnFruit(true);
+        m_ia_player = Player();
+        
+        m_snake = new Snake(m_levels[0]->getStartPosition());
+        m_levels[0]->getSpawnFruit(true);
+        
+    }else{
+        std::cout << "Arquivo de níveis com configurações inválidas!" << std::endl;
+        m_state = GAME_OVER;
+    }
 }
 
+bool SnakeGame::hasValidLevels(){
+    for(auto level: m_levels){
+        auto levelSize = level->getMazeSize();
 
+        if(levelSize.first <= 0 || levelSize.second <= 0 || level->getFoods() <= 0) return false;
+    }
+    return true;
+}
 
 void SnakeGame::inputs(){
     switch(m_state){

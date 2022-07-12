@@ -57,6 +57,13 @@ class Level{
         pair<int, int> getMazeSize();
         
         /**
+         * @brief Retorna a quantidade de comidas do level
+         * 
+         * @return int referente à quantidade de comidas do level
+         */
+        int getFoods();
+        
+        /**
          * @brief Pegar o valor de um elemento específico do mapa
          * 
          * @param l Linha do elemento

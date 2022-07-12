@@ -45,6 +45,13 @@ class SnakeGame{
 
     private:
         /**
+         * @brief Verifica se os níveis de m_levels são válidos (Tem quantidade de linhas, colunas e comidas maiores do que 0)
+         * 
+         * @return true se os níveis são válidos, false caso contrário 
+         */
+        bool hasValidLevels();
+
+        /**
         * @brief realiza a inicialização geral do jogo, fique à vontade para adicionar parâmetros se achar que deve
         **/
         void start();
