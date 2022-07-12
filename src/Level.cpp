@@ -9,11 +9,15 @@ Level::Level(int lines, int columns, int foods){
     m_lines = lines;
     m_columns = columns;
     m_foods = foods;
+    m_startPosition = make_pair(0, 0);
+
     for(int l=0; l < lines; l++){
         std::string line = "";
+
         for(int c=0; c < columns; c++){
             line+=" ";
         }
+
         m_map.push_back(line);
     }
 }
@@ -32,19 +36,11 @@ void Level::printLevel(){ // MÉTODO PARA TESTE
     }
 }
 
-pair<int, int> Level::getStartPosition(){
-    for(int c=0;c < m_lines;c++){
-        if(m_map[c].find("V") != string::npos){
-            m_startLine = c;
-            m_startColumn = m_map[c].find("V");
-        }
-    }
-    return make_pair(m_startLine, m_startColumn);
-}
+pair<int, int> Level::getStartPosition(){return m_startPosition;}
 
-pair<int, int> Level::getMazeSize(){
-    return make_pair(m_lines, m_columns);
-}
+void Level::setStartPosition(pair<int, int> position){m_startPosition = position;}
+
+pair<int, int> Level::getMazeSize(){return make_pair(m_lines, m_columns);}
 
 char Level::getElement(int l, int c){
     return m_map.at(l).at(c);
@@ -64,7 +60,7 @@ bool Level::allowed(std::pair<int,int> pos){
 }
 
 pair<int, int> Level::getSpawnFruit(bool spawn){
-    if (spawn){
+    if(spawn){
         m_fruitPosition = make_pair(rand()%m_lines,rand()%m_columns);
         while(!allowed(m_fruitPosition)){
             m_fruitPosition = make_pair(rand()%m_lines,rand()%m_columns);

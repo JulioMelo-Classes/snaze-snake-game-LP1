@@ -37,6 +37,8 @@ SnakeGame::SnakeGame(string levels){
                 string levelLine = "";
                 
                 for(int c=0; c < columns; c++){
+                    if(line[c]=='V') level->setStartPosition(make_pair(l, c));
+
                     levelLine+=line[c];
                 }
                 
