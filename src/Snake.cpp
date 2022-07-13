@@ -22,3 +22,8 @@ void Snake::move(int l, int c){
     m_position.first += l;
     m_position.second += c;
 }
+
+void Snake::loseLife(){
+    m_lifes--;
+    m_length = 1;
+}

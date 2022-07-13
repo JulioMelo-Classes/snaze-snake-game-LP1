@@ -56,10 +56,12 @@ void SnakeGame::start(){
     if(this->hasValidLevels()){
         m_state = WAITING_USER; //estado inicial é WAITING_USER, mas poderia ser outro
 
+        m_currentLevel = 1;
+
         m_ia_player = Player();
         
-        m_snake = new Snake(m_levels[0]->getStartPosition());
-        m_levels[0]->getSpawnFruit(true);
+        m_snake = new Snake(m_levels[m_currentLevel-1]->getStartPosition());
+        m_levels[m_currentLevel - 1]->getSpawnFruit(true);
         
     }else{
         std::cout << "Arquivo de níveis com configurações inválidas!" << std::endl;
@@ -99,34 +101,32 @@ void SnakeGame::update(){
             //if(m_frameCount>0 && m_frameCount%10 == 0) //depois de 10 frames o jogo pergunta se o usuário quer continuar
             //    m_state = WAITING_USER;
             /*atualiza a posição do pacman de acordo com a escolha*/
-            if(m_action == 0){ //up
+            if(m_action == Player::UP){ // UP
                 m_snake->move(-1,0);
-                int linha = m_snake->getPosition().first;
-                if(linha < 0)
-                    m_snake->setPosition({0, m_snake->getPosition().second});
             }
-            else if(m_action == 1){ //down
+            else if(m_action == Player::DOWN){ // DOWN
                 m_snake->move(1,0);
-                int linha = m_snake->getPosition().first;
-                if(linha >= m_levels[0]->getMazeSize().first)
-                    m_snake->setPosition({m_levels[0]->getMazeSize().first -1, m_snake->getPosition().second});
             }
-            else if(m_action == 2){ //right
+            else if(m_action == Player::RIGHT){ //RIGHT
                 m_snake->move(0,1);
-                int coluna = m_snake->getPosition().second;
-                if(coluna >= m_levels[0]->getMazeSize().second)
-                    m_snake->setPosition({m_snake->getPosition().first,  m_levels[0]->getMazeSize().second - 1});
             }
-            else{ //left
+            else if(m_action == Player::LEFT){ // LEFT
                 m_snake->move(0,-1);
-                int coluna = m_snake->getPosition().second;
-                if(coluna  < 0)
-                    m_snake->setPosition({m_snake->getPosition().first, 0});
             }
+
+            if(!m_levels[m_currentLevel-1]->allowed(m_snake->getPosition())) // Se a posição em que a snake se moveu não for permitida
+                m_state = LOSE_LIFE;
+
             //sempre depois de executar "running" uma vez
             //o jogo pergunta para a IA qual sua escolha
             if(m_state == RUNNING) //se ainda form running (não pediu para esperar pelo user)
                 m_state = WAITING_IA;
+            break;
+        case LOSE_LIFE:
+            m_snake->loseLife(); // Cobra perde 1 vida
+            m_snake->setPosition(m_levels[m_currentLevel - 1]->getStartPosition()); // Reinicia a posição da cobra no nível
+            m_state = WAITING_USER;
+
             break;
         case WAITING_USER: //se o jogo estava esperando pelo usuário então ele testa qual a escolha que foi feita
             if(m_choice == "n"){
@@ -136,7 +136,6 @@ void SnakeGame::update(){
             else{
                 //pode fazer alguma coisa antes de fazer isso aqui
                 m_state = WAITING_IA;
-                
             }
             break;
         case WAITING_IA: //Esperando pela IA
@@ -167,6 +166,9 @@ void SnakeGame::render(){
                 cout<<endl;
             }
             cout<<"l,c: " << m_snake->getPosition().first << "," << m_snake->getPosition().second << " fc: "<<m_frameCount<<endl;
+            break;
+        case LOSE_LIFE:
+            cout << "A snake colidiu e perdeu 1 vida!"<<endl;
             break;
         case WAITING_USER:
             cout<<"Você quer iniciar/continuar o jogo? (s/n)"<<endl;
@@ -209,6 +211,6 @@ void SnakeGame::loop(){
         inputs();
         update();
         render();
-        wait(50);// espera 1 segundo entre cada frame
+        wait(100);// espera 1 segundo entre cada frame
     }
 }

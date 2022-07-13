@@ -10,38 +10,38 @@ void Player::find_solution(Level *level, Snake *snake){
         auto pos = snake->getPosition();
         pos.first -= 1; //up
         if(level->allowed(pos)){
-            m_moves.push_back(0);
+            m_moves.push_back(UP);
             return;
         }
         
         pos = snake->getPosition();
         pos.second += 1; //right
         if(level->allowed(pos)){
-            m_moves.push_back(2);
+            m_moves.push_back(RIGHT);
             return;
         }
 
         pos = snake->getPosition();
         pos.first += 1; //down
         if(level->allowed(pos)){
-            m_moves.push_back(1);
+            m_moves.push_back(DOWN);
             return;
         }
         
         pos = snake->getPosition();
         pos.second -= 1; //left
         if(level->allowed(pos)){
-            m_moves.push_back(3);
+            m_moves.push_back(LEFT);
             return;
         }
     }
     //"resolve o problema com base no mapa, a posição atual da cobra e a posição atual da comida"
 }
 
-int Player::next_move(){
+Player::direction Player::next_move(){
     //sorteia uma ação aleatória que não causa morte
     /*retorna uma ação aleatória entre 0 e 3*/
-    int acao = m_moves.front();
+    direction acao = m_moves.front();
     m_moves.erase(m_moves.begin());
     return acao;
 }

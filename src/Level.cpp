@@ -67,6 +67,8 @@ pair<int, int> Level::getSpawnFruit(bool spawn){
         while(!allowed(m_fruitPosition)){
             m_fruitPosition = make_pair(rand()%m_lines,rand()%m_columns);
         }
+
+        m_foods--; // Decrementa em 1 as comidas a serem sorteadas
     }
     return m_fruitPosition;
 }
