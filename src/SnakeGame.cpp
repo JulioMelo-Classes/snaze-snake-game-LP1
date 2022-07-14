@@ -156,9 +156,9 @@ void SnakeGame::render(){
     //clearScreen();
     switch(m_state){
         case RUNNING:
-            cout << "Life: " << m_snake->getLifes() << "| Score: 0 " << "| Foods Eaten: " << m_snake->getFoodsEaten() << " of " 
+            cout << "Lifes: " << m_snake->getLifes() << " | Score: 0 " << "| Foods Eaten: " << m_snake->getFoodsEaten() << " of " 
             << m_levels[m_currentLevel-1]->getFoods() << endl << endl;
-            
+
             for(int i=0; i<m_levels[0]->getMazeSize().first ;i++){
                 for(int j=0;j<m_levels[0]->getMazeSize().second ; j++){
                     
@@ -171,7 +171,7 @@ void SnakeGame::render(){
                 }
                 cout<<endl;
             }
-            cout<<"l,c: " << m_snake->getPosition().first << "," << m_snake->getPosition().second << " fc: "<<m_frameCount << endl << endl;
+            cout<<"Snake Position: (" << m_snake->getPosition().first << "," << m_snake->getPosition().second << ") | Frame: "<<m_frameCount << endl << endl;
             break;
         case LOSE_LIFE:
             cout << "A snake colidiu e perdeu 1 vida!"<<endl;
