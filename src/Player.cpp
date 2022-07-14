@@ -1,51 +1,47 @@
 #include "Player.hpp"
 #include <iostream>
+#include "utils.hpp"
 
 using namespace std;
 
 void Player::find_solution(Level *level, Snake *snake){
-    auto pos = snake->getPosition();
-    
-    while (true){
-        int a = rand()%4;
-        if (a == 0){
+    std::vector<Direction> generatedMoves = {}; // Movimentos já sorteados    
+    bool hasValidMove = false;
 
-            pos = snake->getPosition();
-            pos.first -= 1; //up
-            if(level->allowed(pos)){
-                m_moves.push_back(UP);
+    auto pos = make_pair(0, 0);
+    Direction dir = UP;
+
+
+    while (!hasValidMove && generatedMoves.size()!=4){ // Enquanto não foi encontrado um movimento válido e ainda não foram sorteados todos os movimentos
+        int randDir = rand()%4;
+        pos = snake->getPosition();
+
+        switch(randDir){
+            case UP:
+                pos.first -=1;
+                dir = UP;
                 break;
-            }
-
-        } else if (a == 1){
-        
-            pos = snake->getPosition();
-            pos.second += 1; //right
-            if(level->allowed(pos)){
-                m_moves.push_back(RIGHT);
+            case DOWN:
+                pos.first +=1;
+                dir = DOWN;
                 break;
-            }
-
-        } else if (a == 2){
-
-            pos = snake->getPosition();
-            pos.first += 1; //down
-            if(level->allowed(pos)){
-                m_moves.push_back(DOWN);
+            case RIGHT:
+                pos.second +=1;
+                dir = RIGHT;
                 break;
-            }
-
-        } else if (a == 3){
-        
-            pos = snake->getPosition();
-            pos.second -= 1; //left
-            if(level->allowed(pos)){
-                m_moves.push_back(LEFT);
-                break;
-            }
-
+            case LEFT:
+                pos.second -=1;
+                dir = LEFT;
         }
+    
+        if(level->allowed(pos)){ // Se a posição sorteada não for matar a snake
+            m_moves.push_back(dir);
+            hasValidMove = true; // Encontrou um movimento válido
+        }if(!isIn(dir, generatedMoves)) generatedMoves.push_back(dir);
     }
+
+    if(!hasValidMove) m_moves.push_back(UP); // Se não achou nenhum movimento válido escolhe qualquer um (Nesse caso, pra cima)
+
     //"resolve o problema com base no mapa, a posição atual da cobra e a posição atual da comida"
 }
 
