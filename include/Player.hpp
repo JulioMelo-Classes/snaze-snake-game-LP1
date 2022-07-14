@@ -12,7 +12,7 @@ class Player{
         /**
          * @brief Descreve as possíveis direções que a IA pode fazer a snake se mover
          */
-        enum direction{
+        enum Direction{
             UP, // Movimento para cima
             DOWN, // Movimento para baixo
             RIGHT, // Movimento para a direita
@@ -20,7 +20,7 @@ class Player{
         };
 
     private:
-        std::vector<direction> m_moves;
+        std::vector<Direction> m_moves;
     public:
 
         /**
@@ -34,6 +34,6 @@ class Player{
          * Retorna a próxima ação do jogador (UP, DOWN, RIGHT ou LEFT)
          * @return a próxima ação do jogador
          **/
-        direction next_move();
+        Direction next_move();
 };
 #endif //Player_hpp

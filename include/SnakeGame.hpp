@@ -32,7 +32,7 @@ class SnakeGame{
         GameStates m_state; // guarda o estado do jogo
         string m_levels_file; // arquivo com os níveis do jogo
         Player m_ia_player; // instancia da classe Player responsável pela IA do jogo
-        Player::direction m_action; // Representa a ação escolhida pela IA
+        Player::Direction m_action; // Representa a ação escolhida pela IA
 
 
     public:
