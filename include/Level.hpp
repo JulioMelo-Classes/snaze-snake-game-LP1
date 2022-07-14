@@ -33,8 +33,6 @@ class Level{
          */
         void insertLine(std::string line,int position);
 
-        void printLevel(); // MÉTODO PARA TESTE
-
         /**
          * @brief Retorna a posição inicial (Onde o personagem nasce) do mapa do level
          * 

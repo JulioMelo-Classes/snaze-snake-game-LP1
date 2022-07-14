@@ -27,3 +27,7 @@ void Snake::loseLife(){
     m_lifes--;
     m_length = 1;
 }
+
+int Snake::getLifes(){return m_lifes;}
+
+int Snake::getFoodsEaten(){return m_foodsEaten;}

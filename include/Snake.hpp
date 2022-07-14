@@ -5,10 +5,11 @@ using namespace std;
 
 class Snake{
     private:
-        pair<int, int> m_position; // Par (l, c) de linha e coluna em que o Snaze se encontra no mapa 
-        char m_icon; // Representação gráfica da Snaze no mapa
-        int m_lifes = 5; // Quantidade de vidas da snaze
-        int m_length = 1; // Comprimento da snaze 
+        pair<int, int> m_position; // Par (l, c) de linha e coluna em que o Snake se encontra no mapa 
+        char m_icon; // Representação gráfica da Snake no mapa
+        int m_lifes = 5; // Quantidade de vidas da snake
+        int m_length = 1; // Comprimento da snake 
+        int m_foodsEaten = 0; // Quantidade de elementos consumidos pela snake
 
     public:
 
@@ -53,6 +54,19 @@ class Snake{
          * @brief Faz a snake perder 1 vida
          */
         void loseLife();
-        
+
+        /**
+         * @brief Obter a quantidade de vidas da snake
+         * 
+         * @return int referente a quantidade de vidas da snake
+         */
+        int getLifes();
+
+        /**
+         * @brief Obter a quantidade de comidas ingeridas pela snake
+         * 
+         * @return int referente à quantidade de comidas obtidas pela snake
+         */
+        int getFoodsEaten();  
 };
 #endif

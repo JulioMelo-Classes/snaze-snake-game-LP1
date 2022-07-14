@@ -28,17 +28,11 @@ void Level::insertLine(std::string line, int position){
     m_map[position] = line;
 }
 
-void Level::printLevel(){ // MÉTODO PARA TESTE
-    std::cout << m_lines << " " << m_columns << " " << m_foods << std::endl;
-
-    for(int i = 0; i < m_lines; i++){
-        std::cout << m_map[i] << std::endl;
-    }
-}
-
 pair<int, int> Level::getStartPosition(){return m_startPosition;}
 
-void Level::setStartPosition(pair<int, int> position){m_startPosition = position;}
+void Level::setStartPosition(pair<int, int> position){
+    m_startPosition = position;
+}
 
 pair<int, int> Level::getMazeSize(){return make_pair(m_lines, m_columns);}
 
