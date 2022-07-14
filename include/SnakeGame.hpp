@@ -17,6 +17,7 @@ class SnakeGame{
         enum GameStates{
             RUNNING, // quando o jogo está executando o estado é RUNNING
             LOSE_LIFE, // Quando a snake perde uma vida
+            END_LIFES, // Quando a quantidade de vidas da snake chega a 0
             GAME_OVER, // quando o jogo deve terminar o estado é GAME_OVER
             WAITING_USER, // quando o jogo deve esperar por uma entrada do usuário o estado é WAITING_USER
             WAITING_IA // usualmente o jogo está esperando por comandos da IA, neste caso o estado é WAITING_IA

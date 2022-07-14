@@ -128,8 +128,16 @@ void SnakeGame::update(){
         case LOSE_LIFE:
             m_snake->loseLife(); // Cobra perde 1 vida
             m_snake->setPosition(m_levels[m_currentLevel - 1]->getStartPosition()); // Reinicia a posição da cobra no nível
-            m_state = WAITING_USER;
 
+            if(m_snake->getLifes() == 0) m_state = END_LIFES; // Se a cobra não tiver mais vidas
+            else m_state = WAITING_USER;
+            
+            break;
+        case END_LIFES:
+            delete m_snake; // Deleta a snake atual
+            m_snake = new Snake(m_levels[0]->getStartPosition()); // Cria outra snake
+             
+            m_state = WAITING_USER; // Após acabar as vidas, o jogo irá perguntar se o jogador quer continuar a simulação
             break;
         case WAITING_USER: //se o jogo estava esperando pelo usuário então ele testa qual a escolha que foi feita
             if(m_choice == "n"){
@@ -175,6 +183,9 @@ void SnakeGame::render(){
             break;
         case LOSE_LIFE:
             cout << "A snake colidiu e perdeu 1 vida!"<<endl;
+            break;
+        case END_LIFES:
+            cout << "Você perdeu todas as vidas. Fim da simulação!" << endl;
             break;
         case WAITING_USER:
             cout<<"Você quer iniciar/continuar o jogo? (s/n)"<<endl;
