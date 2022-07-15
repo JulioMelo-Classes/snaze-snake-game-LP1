@@ -2,7 +2,9 @@
 
 #include <string>
 #include <vector>
-#include <iostream> //! temp
+#include <iostream>
+#include <random>
+
 using namespace std;
 
 Level::Level(int lines, int columns, int foods){
@@ -57,12 +59,18 @@ bool Level::allowed(std::pair<int,int> pos){
 
 pair<int, int> Level::getSpawnFruit(bool spawn){
     if(spawn){
-        m_fruitPosition = make_pair(rand()%m_lines,rand()%m_columns);
+        std::random_device rd;
+        std::default_random_engine eng(rd());
+
+        std::uniform_int_distribution<int> distrLines(0, m_lines - 1);
+        std::uniform_int_distribution<int> distrColumns(0, m_columns - 1);
+
+        m_fruitPosition = make_pair(distrLines(eng), distrColumns(eng));
+
         while(!allowed(m_fruitPosition)){
-            m_fruitPosition = make_pair(rand()%m_lines,rand()%m_columns);
+            m_fruitPosition = make_pair(distrLines(eng), distrColumns(eng));
         }
 
-        m_foods--; // Decrementa em 1 as comidas a serem sorteadas
     }
     return m_fruitPosition;
 }
