@@ -31,3 +31,8 @@ void Snake::loseLife(){
 int Snake::getLifes(){return m_lifes;}
 
 int Snake::getFoodsEaten(){return m_foodsEaten;}
+
+void Snake::eatFood(){
+    m_foodsEaten++;
+    m_length++; // Aumenta a cauda
+}

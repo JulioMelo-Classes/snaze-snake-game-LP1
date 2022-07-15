@@ -88,7 +88,7 @@ void SnakeGame::inputs(){
             break;
         case WAITING_IA:
             //TODO - IA ALEATORIA
-            m_ia_player.find_solution(m_levels[0], m_snake);
+            m_ia_player.find_solution(m_levels[m_currentLevel - 1], m_snake);
             m_action = m_ia_player.next_move();
             break;
         default:
@@ -115,6 +115,11 @@ void SnakeGame::update(){
             }
             else if(m_action == Player::LEFT){ // LEFT
                 m_snake->move(0,-1);
+            }
+
+            if(m_snake->getPosition() == m_levels[m_currentLevel - 1]->getSpawnFruit(false)){ // Se o snake encostou na comida
+                m_snake->eatFood();
+                m_levels[m_currentLevel - 1]->getSpawnFruit(true); // MODIFICAR DEPOIS PARA CONSIDERAR O CASO DE COMER A ÙLTIMA COMIDA DO MAPA
             }
 
             if(!m_levels[m_currentLevel-1]->allowed(m_snake->getPosition())) // Se a posição em que a snake se moveu não for permitida

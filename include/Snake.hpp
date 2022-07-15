@@ -68,5 +68,11 @@ class Snake{
          * @return int referente à quantidade de comidas obtidas pela snake
          */
         int getFoodsEaten();  
+
+        /**
+         * @brief Realiza a ação de comer uma comida do mapa
+         * 
+         */
+        void eatFood();
 };
 #endif
