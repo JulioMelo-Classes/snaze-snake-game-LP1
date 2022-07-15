@@ -1,6 +1,8 @@
 #include "Player.hpp"
 #include <iostream>
+#include <random>
 #include "utils.hpp"
+
 
 using namespace std;
 
@@ -13,7 +15,12 @@ void Player::find_solution(Level *level, Snake *snake){
 
 
     while (!hasValidMove && generatedMoves.size()!=4){ // Enquanto não foi encontrado um movimento válido e ainda não foram sorteados todos os movimentos
-        int randDir = rand()%4;
+        std::random_device rd;
+        std::default_random_engine eng(rd());
+
+        std::uniform_int_distribution<int> distrLines(0, 3); // Sorteia um dos 4 movimentos        
+
+        int randDir = distrLines(eng);
         pos = snake->getPosition();
 
         switch(randDir){
