@@ -267,9 +267,21 @@ void SnakeGame::loop()
     render(); // chama um render para a interface inicial
     while (m_state != GAME_OVER)
     {
-        inputs();
-        update();
-        render();
+        cout << "\033[1;32mSTATUS\033[0m: ";
+        if (m_state == WAITING_IA)
+        {
+            cout << "Aguardando os dados da IA..." << endl;
+        }
+        else if(m_state == WAITING_USER)
+        {
+            cout << "Aguardando os dados do usuario..." << endl;
+
+        } else if (m_state == RUNNING){
+            cout << "Processando os dados e renderizando o level" << endl;
+        }
+        inputs();  // nao executado no RUNNING
+        render();  // nao executado no WAITING_IA
+        update();  // skipa para o render quando no WAITING_IA
         wait(100); // espera 1 segundo entre cada frame
     }
 }

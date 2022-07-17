@@ -71,7 +71,6 @@ int Player::bfs(Level *level, Snake *snake)
 
     Location temp = {startPosition, 0, vector<Direction>()};
     paths.push(temp);
-    cout << "reach the loop" << endl;
 
     while (!paths.empty())
     {
@@ -134,24 +133,24 @@ bool Player::find_solution(Level *level, Snake *snake, string mode)
 Player::Direction Player::next_move()
 {
     //* imprime os movimentos
-    cout << "moves: -";
+    cout << "- MOVES: ";
     for (size_t i = 0; i < m_moves.size(); i++)
     {
         if (m_moves[i] == UP)
         {
-            cout << "UP" << '-';
+            cout << "\033[1;36m↑ \033[0m";
         }
         else if (m_moves[i] == LEFT)
         {
-            cout << "LEFT" << '-';
+            cout << "\033[1;36m← \033[0m";
         }
         else if (m_moves[i] == RIGHT)
         {
-            cout << "RIGHT" << '-';
+            cout << "\033[1;36m→ \033[0m";
         }
         else if (m_moves[i] == DOWN)
         {
-            cout << "DOWN" << '-';
+            cout << "\033[1;36m↓ \033[0m";
         }
     }
     cout << endl;
