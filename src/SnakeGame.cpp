@@ -85,10 +85,11 @@ void SnakeGame::inputs(){
     switch(m_state){
         case WAITING_USER: //o jogo bloqueia aqui esperando o usuário digitar a escolha dele
             cin>>std::ws>>m_choice;
+            //m_ia_player.find_solution(m_levels[m_currentLevel - 1], m_snake, "bfs");    //* MODO RANDOM IA <---
             break;
         case WAITING_IA:
             //TODO - IA ALEATORIA
-            m_ia_player.find_solution(m_levels[m_currentLevel - 1], m_snake);
+            m_ia_player.find_solution(m_levels[m_currentLevel - 1], m_snake, "randomIA"); //*MODO RANDOM IA <---
             m_action = m_ia_player.next_move();
             break;
         default:
