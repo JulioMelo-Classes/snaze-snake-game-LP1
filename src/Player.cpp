@@ -1,10 +1,10 @@
 #include "Player.hpp"
-#include <iostream>
-#include <vector>
-#include <algorithm>
-#include <random>
 #include "utils.hpp"
+#include <algorithm>
+#include <iostream>
 #include <queue>
+#include <random>
+#include <vector>
 
 using namespace std;
 
@@ -118,7 +118,7 @@ int Player::bfs(Level *level, Snake *snake)
 
 bool Player::find_solution(Level *level, Snake *snake, string mode)
 {
-    //define a matriz de posicoes visitas pelo tamanho do level
+    // define a matriz de posicoes visitas pelo tamanho do level
     m_visited.resize(level->getMazeSize().first, vector<bool>(level->getMazeSize().second));
     if (mode == "bfs")
     {
@@ -137,19 +137,19 @@ Player::Direction Player::next_move()
     cout << "moves: -";
     for (size_t i = 0; i < m_moves.size(); i++)
     {
-        if (m_moves[0] == UP)
+        if (m_moves[i] == UP)
         {
             cout << "UP" << '-';
         }
-        else if (m_moves[0] == LEFT)
+        else if (m_moves[i] == LEFT)
         {
             cout << "LEFT" << '-';
         }
-        else if (m_moves[0] == RIGHT)
+        else if (m_moves[i] == RIGHT)
         {
             cout << "RIGHT" << '-';
         }
-        else if (m_moves[0] == DOWN)
+        else if (m_moves[i] == DOWN)
         {
             cout << "DOWN" << '-';
         }
