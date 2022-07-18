@@ -41,7 +41,7 @@ class Player{
          * @param snake a cobra
          * @return int a quantidade de movimentos ate chegar na comida
          */
-        int  bfs       (Level *level, Snake *snake);
+        int  bfs(Level *level, Snake *snake);
 
         /**
          * @brief medo da IA baseado na selecao aleatoria de movimentos
@@ -49,13 +49,13 @@ class Player{
          * @param level faze atual
          * @param snake a cobra
          */
-        void randomIA  (Level *level, Snake *snake); 
+        void randomIA(Level *level, Snake *snake); 
 
     public:
 
         /**
          * define o conjunto de movimentos ideal para a snake com base no level atual
-         * @param level faze atual
+         * @param level fase atual
          * @param snake a snake
          * @param mode seliciona o modelo da ia(bfs ou randomIA)
          * @return a próxima ação do jogador

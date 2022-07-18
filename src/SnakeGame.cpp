@@ -100,12 +100,14 @@ void SnakeGame::inputs()
     case WAITING_USER: // o jogo bloqueia aqui esperando o usuário digitar a escolha dele
         cin >> std::ws >> m_choice;
         // TODO IA - busca em largura
-        m_ia_player.find_solution(m_levels[m_currentLevel - 1], m_snake, "bfs"); //* MODO BFS IA <---
+        //m_ia_player.find_solution(m_levels[m_currentLevel - 1], m_snake, "bfs"); //* MODO BFS IA <---
         break;
     case WAITING_IA:
-        // m_ia_player.find_solution(m_levels[m_currentLevel - 1], m_snake, "randomIA"); //* MODO RANDOM IA <---
+        m_ia_player.find_solution(m_levels[m_currentLevel - 1], m_snake, "randomIA"); //* MODO RANDOM IA <---
         m_action = m_ia_player.next_move();
         break;
+    case LEVEL_UP:
+        cin >> std::ws >> m_choice;
     default:
         // nada pra fazer aqui
         break;
@@ -118,9 +120,6 @@ void SnakeGame::update()
     switch (m_state)
     {
     case RUNNING:
-        // if(m_frameCount>0 && m_frameCount%10 == 0) //depois de 10 frames o jogo pergunta se o usuário quer continuar
-        //     m_state = WAITING_USER;
-        /*atualiza a posição do pacman de acordo com a escolha*/
         if (m_action == Player::UP)
         { // UP
             m_snake->move(-1, 0);
@@ -141,14 +140,17 @@ void SnakeGame::update()
         if (m_snake->getPosition() == m_levels[m_currentLevel - 1]->getSpawnFruit(false))
         { // Se o snake encostou na comida
             m_snake->eatFood();
-            m_levels[m_currentLevel - 1]->getSpawnFruit(true); // MODIFICAR DEPOIS PARA CONSIDERAR O CASO DE COMER A ÙLTIMA COMIDA DO MAPA
+
+            if(m_snake->getFoodsEaten() == m_levels[m_currentLevel - 1]->getFoods()) // Se a cobra comeu todas as comidas do mapa
+                m_state = (m_currentLevel + 1 > m_levels.size())?WIN_SIMULATION:LEVEL_UP; // Se o próximo nível existe
+            else
+                m_levels[m_currentLevel - 1]->getSpawnFruit(true);
+            
         }
 
         if (!m_levels[m_currentLevel - 1]->allowed(m_snake->getPosition())) // Se a posição em que a snake se moveu não for permitida
             m_state = LOSE_LIFE;
 
-        // sempre depois de executar "running" uma vez
-        // o jogo pergunta para a IA qual sua escolha
         if (m_state == RUNNING) // se ainda form running (não pediu para esperar pelo user)
             m_state = WAITING_IA;
         break;
@@ -163,10 +165,22 @@ void SnakeGame::update()
 
         break;
     case END_LIFES:
-        delete m_snake;                                       // Deleta a snake atual
-        m_snake = new Snake(m_levels[0]->getStartPosition()); // Cria outra snake
+        m_snake->resetAttributes(true); // Reinicia os atributos da snake
+        m_snake->setPosition(m_levels[0]->getStartPosition()); // reinicia a posição da snake no nível 0
+        m_currentLevel = 1; // Reinicia  o nível
 
         m_state = WAITING_USER; // Após acabar as vidas, o jogo irá perguntar se o jogador quer continuar a simulação
+        break;
+    case LEVEL_UP:
+        if(m_choice=="1") m_currentLevel++;
+        if(m_choice=="3") m_currentLevel = 1; // Reinicia o nível para 1
+        // O caso da escolha ser 2, o nível apenas se mantém
+
+        m_snake->resetAttributes(false); // Reinicia os atributos da snake sem restaurar as vidas 
+        m_snake->setPosition(m_levels[m_currentLevel - 1]->getStartPosition());
+        m_levels[m_currentLevel - 1]->getSpawnFruit(true);
+
+        m_state = WAITING_IA;
         break;
     case WAITING_USER: // se o jogo estava esperando pelo usuário então ele testa qual a escolha que foi feita
         if (m_choice == "n")
@@ -201,17 +215,17 @@ void SnakeGame::render()
              << m_levels[m_currentLevel - 1]->getFoods() << endl
              << endl;
 
-        for (int i = 0; i < m_levels[0]->getMazeSize().first; i++)
+        for (int i = 0; i < m_levels[m_currentLevel - 1]->getMazeSize().first; i++)
         {
-            for (int j = 0; j < m_levels[0]->getMazeSize().second; j++)
+            for (int j = 0; j < m_levels[m_currentLevel - 1]->getMazeSize().second; j++)
             {
 
                 if (i == m_snake->getPosition().first && j == m_snake->getPosition().second)
                     cout << m_snake->getIcon();
-                else if (i == m_levels[0]->getSpawnFruit(false).first && j == m_levels[0]->getSpawnFruit(false).second)
+                else if (i == m_levels[m_currentLevel - 1]->getSpawnFruit(false).first && j == m_levels[m_currentLevel - 1]->getSpawnFruit(false).second)
                     cout << "F";
                 else
-                    cout << m_levels[0]->getElement(i, j);
+                    cout << m_levels[m_currentLevel - 1]->getElement(i, j);
             }
             cout << endl;
         }
@@ -223,6 +237,13 @@ void SnakeGame::render()
         break;
     case END_LIFES:
         cout << "Você perdeu todas as vidas. Fim da simulação!" << endl;
+        break;
+    case LEVEL_UP:
+        cout << "Você completou o nível " << m_currentLevel << "." << endl;
+        cout << "O que deseja fazer? " << endl;
+        cout << "1. Ir para o próximo nível" << endl;
+        cout << "2. Reiniciar o nível " << m_currentLevel << endl;
+        cout << "3. Reiniciar simulação" << endl;
         break;
     case WAITING_USER:
         cout << "Você quer iniciar/continuar o jogo? (s/n)" << endl;
@@ -267,21 +288,22 @@ void SnakeGame::loop()
     render(); // chama um render para a interface inicial
     while (m_state != GAME_OVER)
     {
-        cout << "\033[1;32mSTATUS\033[0m: ";
-        if (m_state == WAITING_IA)
-        {
-            cout << "Aguardando os dados da IA..." << endl;
-        }
-        else if(m_state == WAITING_USER)
-        {
-            cout << "Aguardando os dados do usuario..." << endl;
+        // cout << "\033[1;32mSTATUS\033[0m: ";
+        // if (m_state == WAITING_IA)
+        // {
+        //     cout << "Aguardando os dados da IA..." << endl;
+        // }
+        // else if(m_state == WAITING_USER)
+        // {
+        //     cout << "Aguardando os dados do usuario..." << endl;
 
-        } else if (m_state == RUNNING){
-            cout << "Processando os dados e renderizando o level" << endl;
-        }
+        // } else if (m_state == RUNNING){
+        //     cout << "Processando os dados e renderizando o level" << endl;
+        // }
         inputs();  // nao executado no RUNNING
-        render();  // nao executado no WAITING_IA
         update();  // skipa para o render quando no WAITING_IA
+        render();  // nao executado no WAITING_IA
+        
         wait(100); // espera 1 segundo entre cada frame
     }
 }

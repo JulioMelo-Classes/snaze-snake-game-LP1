@@ -68,7 +68,7 @@ int Player::bfs(Level *level, Snake *snake)
     m_visited[startPosition.first][startPosition.second] = true; // marca a posicao como visitada
 
     queue<Location> paths; // fila com os possiveis caminhos
-
+    
     Location temp = {startPosition, 0, vector<Direction>()};
     paths.push(temp);
 
@@ -133,27 +133,27 @@ bool Player::find_solution(Level *level, Snake *snake, string mode)
 Player::Direction Player::next_move()
 {
     //* imprime os movimentos
-    cout << "- MOVES: ";
-    for (size_t i = 0; i < m_moves.size(); i++)
-    {
-        if (m_moves[i] == UP)
-        {
-            cout << "\033[1;36m↑ \033[0m";
-        }
-        else if (m_moves[i] == LEFT)
-        {
-            cout << "\033[1;36m← \033[0m";
-        }
-        else if (m_moves[i] == RIGHT)
-        {
-            cout << "\033[1;36m→ \033[0m";
-        }
-        else if (m_moves[i] == DOWN)
-        {
-            cout << "\033[1;36m↓ \033[0m";
-        }
-    }
-    cout << endl;
+    // cout << "- MOVES: ";
+    // for (size_t i = 0; i < m_moves.size(); i++)
+    // {
+    //     if (m_moves[i] == UP)
+    //     {
+    //         cout << "\033[1;36m↑ \033[0m";
+    //     }
+    //     else if (m_moves[i] == LEFT)
+    //     {
+    //         cout << "\033[1;36m← \033[0m";
+    //     }
+    //     else if (m_moves[i] == RIGHT)
+    //     {
+    //         cout << "\033[1;36m→ \033[0m";
+    //     }
+    //     else if (m_moves[i] == DOWN)
+    //     {
+    //         cout << "\033[1;36m↓ \033[0m";
+    //     }
+    // }
+    // cout << endl;
 
     Direction acao = m_moves.front();
     m_moves.erase(m_moves.begin());

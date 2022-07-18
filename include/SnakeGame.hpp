@@ -18,7 +18,9 @@ class SnakeGame{
             RUNNING, // quando o jogo está executando o estado é RUNNING
             LOSE_LIFE, // Quando a snake perde uma vida
             END_LIFES, // Quando a quantidade de vidas da snake chega a 0
+            LEVEL_UP, // Quando a snake passa de fase (ao comer todas as comidas dela)
             GAME_OVER, // quando o jogo deve terminar o estado é GAME_OVER
+            WIN_SIMULATION, // Quando o player vence todos os níveis da simulação
             WAITING_USER, // quando o jogo deve esperar por uma entrada do usuário o estado é WAITING_USER
             WAITING_IA // usualmente o jogo está esperando por comandos da IA, neste caso o estado é WAITING_IA
         };

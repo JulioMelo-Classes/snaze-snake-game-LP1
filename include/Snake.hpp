@@ -56,6 +56,13 @@ class Snake{
         void loseLife();
 
         /**
+         * @brief Reinicia os atributos básicos da snake (Vida, comidas ingeridas e comprimento)
+         * 
+         * @param resetLife se a vida deve ser restaurada ou não
+         */
+        void resetAttributes(bool resetLife);
+
+        /**
          * @brief Obter a quantidade de vidas da snake
          * 
          * @return int referente a quantidade de vidas da snake

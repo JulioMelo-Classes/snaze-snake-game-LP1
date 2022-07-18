@@ -26,6 +26,13 @@ void Snake::move(int l, int c){
 void Snake::loseLife(){
     m_lifes--;
     m_length = 1;
+    m_foodsEaten = 0;
+}
+
+void Snake::resetAttributes(bool resetLife){
+    m_lifes = (resetLife)?5:m_lifes;
+    m_length = 1;
+    m_foodsEaten = 0;
 }
 
 int Snake::getLifes(){return m_lifes;}
