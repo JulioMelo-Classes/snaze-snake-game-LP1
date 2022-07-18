@@ -156,6 +156,7 @@ void SnakeGame::update()
     case LOSE_LIFE:
         m_snake->loseLife();                                                    // Cobra perde 1 vida
         m_snake->setPosition(m_levels[m_currentLevel - 1]->getStartPosition()); // Reinicia a posição da cobra no nível
+        m_levels[m_currentLevel -1]->getSpawnFood(true);
 
         if (m_snake->getLifes() == 0)
             m_state = END_LIFES; // Se a cobra não tiver mais vidas
