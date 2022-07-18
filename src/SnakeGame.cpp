@@ -81,6 +81,30 @@ void SnakeGame::start()
     }
 }
 
+/**
+ * @brief função auxiliar para fazer o programa esperar por alguns milisegundos
+ * @param ms a quantidade de segundos que o programa deve esperar
+ */
+void wait(int ms)
+{
+    this_thread::sleep_for(chrono::milliseconds(ms));
+}
+
+/**
+ * @brief função auxiliar para limpar o terminal
+ */
+void clearScreen()
+{
+// some C++ voodoo here ;D
+#if defined _WIN32
+    system("cls");
+#elif defined(__LINUX__) || defined(__gnu_linux__) || defined(__linux__)
+    system("clear");
+#elif defined(__APPLE__)
+    system("clear");
+#endif
+}
+
 void SnakeGame::inputs()
 {
     switch (m_state)
@@ -99,7 +123,7 @@ void SnakeGame::inputs()
         }
         m_action = m_ia_player.next_move();
         break;
-    case LEVEL_UP:
+    case WIN_SIMULATION: case LEVEL_UP:
         cin >> std::ws >> m_choice;
     default:
         // nada pra fazer aqui
@@ -157,6 +181,20 @@ void SnakeGame::update()
 
         m_state = WAITING_IA;
         break;
+    case WIN_SIMULATION:
+        if(m_choice == "1"){
+            m_currentLevel = 1; // Reinicia do nível 1
+            m_levels[m_currentLevel - 1]->getSpawnFood(true);
+            m_snake->resetAttributes(true);
+            m_snake->setPosition(m_levels[m_currentLevel - 1]->getStartPosition());
+            m_eaten = true;
+
+            m_state = WAITING_IA;           
+        }
+        else
+            m_state = GAME_OVER; // Termina o jogo
+
+        break;
     case WAITING_USER: // se o jogo estava esperando pelo usuário então ele testa qual a escolha que foi feita
         if (m_choice == "n")
         {
@@ -181,7 +219,7 @@ void SnakeGame::update()
 
 void SnakeGame::render()
 {
-    // clearScreen();
+    //clearScreen();
     switch (m_state)
     {
     case RENDERING:
@@ -247,6 +285,12 @@ void SnakeGame::render()
         cout << "2. Reiniciar o nível " << m_currentLevel << endl;
         cout << "3. Reiniciar simulação" << endl;
         break;
+    case WIN_SIMULATION:
+        cout << "Você venceu a simulação!" << endl;
+        cout << "O que deseja fazer? " << endl;
+        cout << "1. Reiniciar simulação" << endl;
+        cout << "2. Encerrar simulação" << endl;         
+        break;
     case WAITING_USER:
         cout << "Você quer iniciar/continuar o jogo? (s/n)" << endl;
         break;
@@ -255,30 +299,6 @@ void SnakeGame::render()
         break;
     }
     m_frameCount++;
-}
-
-/**
- * @brief função auxiliar para fazer o programa esperar por alguns milisegundos
- * @param ms a quantidade de segundos que o programa deve esperar
- */
-void wait(int ms)
-{
-    this_thread::sleep_for(chrono::milliseconds(ms));
-}
-
-/**
- * @brief função auxiliar para limpar o terminal
- */
-void clearScreen()
-{
-// some C++ voodoo here ;D
-#if defined _WIN32
-    system("cls");
-#elif defined(__LINUX__) || defined(__gnu_linux__) || defined(__linux__)
-    system("clear");
-#elif defined(__APPLE__)
-    system("clear");
-#endif
 }
 
 void SnakeGame::game_over()
