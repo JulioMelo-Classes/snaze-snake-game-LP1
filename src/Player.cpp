@@ -159,7 +159,7 @@ int Player::bfs(Level *level, Snake *snake)
                 default:
                     break;
                 }
-                cout << "REGISTRO: " << adjacentPosition.position.first << " " << adjacentPosition.position.second << " - " << adjacentPosition.distanceFromStart << " - " << adjacentPosition.moveRegister.size() << endl;
+                //cout << "REGISTRO: " << adjacentPosition.position.first << " " << adjacentPosition.position.second << " - " << adjacentPosition.distanceFromStart << " - " << adjacentPosition.moveRegister.size() << endl;
 
                 paths.push(adjacentPosition);
             }
