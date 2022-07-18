@@ -50,13 +50,6 @@ class SnakeGame{
 
     private:
         /**
-         * @brief Verifica se os níveis de m_levels são válidos (Tem quantidade de linhas, colunas e comidas maiores do que 0)
-         * 
-         * @return true se os níveis são válidos, false caso contrário 
-         */
-        bool hasValidLevels();
-
-        /**
         * @brief realiza a inicialização geral do jogo, fique à vontade para adicionar parâmetros se achar que deve
         **/
         void start();
@@ -81,6 +74,23 @@ class SnakeGame{
         **/
         void game_over();
 
+        /**
+         * @brief Verifica se os níveis de m_levels são válidos (Tem quantidade de linhas, colunas e comidas maiores do que 0)
+         * 
+         * @return true se os níveis são válidos, false caso contrário 
+         */
+        bool hasValidLevels();
+
+        /**
+         * @brief Processar o movimento da IA e atualizar o movimento da snake com base nisso
+         */
+        void processIAMove();
+
+        /**
+         * @brief Verifica se a snake encostou em uma comida do mapa e faz as atualizações necessárias
+         * 
+         */
+        void processFoodColision();
 };
 
 #endif //SnakeGame_hpp

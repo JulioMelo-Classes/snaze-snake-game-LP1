@@ -6,7 +6,7 @@ using namespace std;
 int main(int argc, char *argv[]){
 
     //TODO: processar os argumentos
-    SnakeGame game("../data/maze1.txt");//* START
+    SnakeGame game("../data/teste.txt");//* START
     
     game.loop();//* UPDATE
 

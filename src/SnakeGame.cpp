@@ -81,18 +81,6 @@ void SnakeGame::start()
     }
 }
 
-bool SnakeGame::hasValidLevels()
-{
-    for (auto level : m_levels)
-    {
-        auto levelSize = level->getMazeSize();
-
-        if (levelSize.first <= 0 || levelSize.second <= 0 || level->getFoods() <= 0)
-            return false;
-    }
-    return true;
-}
-
 void SnakeGame::inputs()
 {
     switch (m_state)
@@ -120,39 +108,15 @@ void SnakeGame::update()
     switch (m_state)
     {
     case RUNNING:
-        if (m_action == Player::UP)
-        { // UP
-            m_snake->move(-1, 0);
-        }
-        else if (m_action == Player::DOWN)
-        { // DOWN
-            m_snake->move(1, 0);
-        }
-        else if (m_action == Player::RIGHT)
-        { // RIGHT
-            m_snake->move(0, 1);
-        }
-        else if (m_action == Player::LEFT)
-        { // LEFT
-            m_snake->move(0, -1);
-        }
+        this->processIAMove();
+        this->processFoodColision();
 
-        if (m_snake->getPosition() == m_levels[m_currentLevel - 1]->getSpawnFruit(false))
-        { // Se o snake encostou na comida
-            m_snake->eatFood();
-
-            if(m_snake->getFoodsEaten() == m_levels[m_currentLevel - 1]->getFoods()) // Se a cobra comeu todas as comidas do mapa
-                m_state = (m_currentLevel + 1 > m_levels.size())?WIN_SIMULATION:LEVEL_UP; // Se o próximo nível existe
-            else
-                m_levels[m_currentLevel - 1]->getSpawnFruit(true);
-            
-        }
-
-        if (!m_levels[m_currentLevel - 1]->allowed(m_snake->getPosition())) // Se a posição em que a snake se moveu não for permitida
+        if(!m_levels[m_currentLevel - 1]->allowed(m_snake->getPosition())) // Se a posição em que a snake se moveu não for permitida
             m_state = LOSE_LIFE;
 
-        if (m_state == RUNNING) // se ainda form running (não pediu para esperar pelo user)
+        if(m_state == RUNNING) // se ainda form running (não pediu para esperar pelo user)
             m_state = WAITING_IA;
+
         break;
     case LOSE_LIFE:
         m_snake->loseLife();                                                    // Cobra perde 1 vida
@@ -305,5 +269,47 @@ void SnakeGame::loop()
         render();  // nao executado no WAITING_IA
         
         wait(100); // espera 1 segundo entre cada frame
+    }
+}
+
+bool SnakeGame::hasValidLevels()
+{
+    for (auto level : m_levels)
+    {
+        auto levelSize = level->getMazeSize();
+
+        if (levelSize.first <= 0 || levelSize.second <= 0 || level->getFoods() <= 0)
+            return false;
+    }
+    return true;
+}
+
+void SnakeGame::processIAMove(){
+    if (m_action == Player::UP)
+    { // UP
+        m_snake->move(-1, 0);
+    }
+    else if (m_action == Player::DOWN)
+    { // DOWN
+        m_snake->move(1, 0);
+    }
+    else if (m_action == Player::RIGHT)
+    { // RIGHT
+        m_snake->move(0, 1);
+    }
+    else if (m_action == Player::LEFT)
+    { // LEFT
+        m_snake->move(0, -1);
+    }
+}
+
+void SnakeGame::processFoodColision(){
+    if (m_snake->getPosition() == m_levels[m_currentLevel - 1]->getSpawnFruit(false)){ // Se o snake encostou na comida
+        m_snake->eatFood();
+
+        if(m_snake->getFoodsEaten() == m_levels[m_currentLevel - 1]->getFoods()) // Se a cobra comeu todas as comidas do mapa
+            m_state = (m_currentLevel + 1 > m_levels.size())?WIN_SIMULATION:LEVEL_UP; // Se o próximo nível existe
+        else
+            m_levels[m_currentLevel - 1]->getSpawnFruit(true);            
     }
 }
