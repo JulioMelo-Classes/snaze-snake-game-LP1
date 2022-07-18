@@ -210,21 +210,24 @@ void SnakeGame::render()
             }
             cout << endl;
 
-
-
+        for (int j = 0; j < m_levels[m_currentLevel - 1]->getMazeSize().second; j++){
+            cout  << "\033[4;36m" << j << "\033[0m" ;
+        }
+        cout << "\033[4;36m" << "|●" << "\033[0m";
+        cout << endl;
         for (int i = 0; i < m_levels[m_currentLevel - 1]->getMazeSize().first; i++)
         {
             for (int j = 0; j < m_levels[m_currentLevel - 1]->getMazeSize().second; j++)
             {
 
                 if (i == m_snake->getPosition().first && j == m_snake->getPosition().second)
-                    cout << m_snake->getIcon();
+                    cout << "\033[1;32m" << m_snake->getIcon() << "\033[0m" ;
                 else if (i == m_levels[m_currentLevel - 1]->getSpawnFood(false).first && j == m_levels[m_currentLevel - 1]->getSpawnFood(false).second)
                     cout << "\033[31m●\033[0m";
                 else
                     cout << m_levels[m_currentLevel - 1]->getElement(i, j);
             }
-            cout << endl;
+            cout << "\033[36m" << "|" << i  << "\033[0m" << endl;
         }
         cout << "Snake Position: (" << m_snake->getPosition().first << "," << m_snake->getPosition().second 
              << ") | Frame: " << m_frameCount
@@ -288,7 +291,7 @@ void SnakeGame::loop()
     while (m_state != GAME_OVER)
     {
         wait(100); // espera 1 segundo entre cada frame
-        cout << "\033[1;32mSTATUS(" << m_state << ")\033[0m: ";
+        cout << "\033[1;33mSTATUS(" << m_state << ")\033[0m: ";
         if (m_state == WAITING_IA)
         {
             cout << "Aguardando dados da IA... ";
@@ -301,7 +304,7 @@ void SnakeGame::loop()
             cout << "Processando dados... ";
         } else if (m_state == RENDERING){
 
-            cout << "Renderizando level... ";
+            cout << "Level renderizado.";
         }
         inputs(); // nao executado no RUNNING
         update(); // skipa para o render quando no WAITING_IA

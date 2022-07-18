@@ -118,11 +118,13 @@ int Player::bfs(Level *level, Snake *snake)
     queue<Location> paths; // fila com os possiveis caminhos
     
     Location temp = {startPosition, 0, vector<Direction>()};
+    //cout << "REGISTRO: " << temp.position.first << " " << temp.position.second << " - "  << temp.distanceFromStart << " - " << temp.moveRegister.size() << endl;
     paths.push(temp);
     pair<int,int> food = level->getSpawnFood(false);
 
     while (!paths.empty())
     {
+        
         Location location = paths.front();
         if (location.position == food)
         {
@@ -157,6 +159,8 @@ int Player::bfs(Level *level, Snake *snake)
                 default:
                     break;
                 }
+                //cout << "REGISTRO: " << adjacentPosition.position.first << " " << adjacentPosition.position.second << " - "  << adjacentPosition.distanceFromStart << " - " << adjacentPosition.moveRegister.size() << endl;
+
                 paths.push(adjacentPosition);
             }
         }
