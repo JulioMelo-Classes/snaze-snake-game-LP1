@@ -291,14 +291,17 @@ void SnakeGame::loop()
         cout << "\033[1;32mSTATUS(" << m_state << ")\033[0m: ";
         if (m_state == WAITING_IA)
         {
-            cout << "Aguardando os dados da IA...";
+            cout << "Aguardando dados da IA... ";
         }
         else if(m_state == WAITING_USER)
         {
-            cout << "Aguardando os dados do usuario...";
+            cout << "Aguardando dados do usuario... ";
 
         } else if (m_state == RUNNING){
-            cout << "Processando os dados e renderizando o level";
+            cout << "Processando dados... ";
+        } else if (m_state == RENDERING){
+
+            cout << "Renderizando level... ";
         }
         inputs(); // nao executado no RUNNING
         update(); // skipa para o render quando no WAITING_IA

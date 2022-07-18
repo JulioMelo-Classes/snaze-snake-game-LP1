@@ -58,6 +58,54 @@ void Player::randomIA(Level *level, Snake *snake)
         m_moves.push_back(UP); // Se não achou nenhum movimento válido escolhe qualquer um (Nesse caso, pra cima)
 }
 
+bool Player::backTracking(Level *level, Snake *snake, pair<int, int> position)
+{
+    for (size_t i = 0; i < m_visited.size(); i++)
+    {
+        for (size_t j = 0; j < m_visited[i].size(); j++)
+        {
+            if (m_visited[i][j])
+            {
+                cout << "X";
+            }
+            else
+            {
+                cout << "=";
+            }
+        }
+        cout << endl;
+    }
+    m_visited[position.first][position.second] = true;
+    cout << "oi ---------------------";
+    if (position == level->getSpawnFood(false))
+    {
+        return true;
+    }
+    else
+    {
+        if (level->isPath(make_pair(position.first + 1, position.second)) && !m_visited[position.first + 1][position.second])
+        {
+            backTracking(level, snake, make_pair(position.first + 1, position.second));
+        }
+
+        if (level->isPath(make_pair(position.first - 1, position.second)) && !m_visited[position.first - 1][position.second])
+        {
+            backTracking(level, snake, make_pair(position.first - 1, position.second));
+        }
+
+        if (level->isPath(make_pair(position.first, position.second + 1)) && !m_visited[position.first][position.second + 1])
+        {
+            backTracking(level, snake, make_pair(position.first, position.second + 1));
+        }
+
+        if (level->isPath(make_pair(position.first, position.second - 1)) && !m_visited[position.first][position.second - 1])
+        {
+            backTracking(level, snake, make_pair(position.first, position.second - 1));
+        }
+    }
+    return false;
+}
+
 int Player::bfs(Level *level, Snake *snake)
 {
     pair<int, int> startPosition = snake->getPosition();
@@ -151,7 +199,7 @@ Player::Direction Player::next_move()
         return acao;
     } else
     {
-        cout << "IA sem movimentos";
+        cout << "\033[1;31m(IA sem movimentos) \033[0m";
         return UP;
     }
 }

@@ -51,6 +51,18 @@ class Player{
          */
         void randomIA(Level *level, Snake *snake); 
 
+        /**
+         * @brief metodo da IA baseado em busca em profundidade(Backtracking)
+         * 
+         * @param level faze atual
+         * @param snake a cobra
+         * @param position posicao atual
+         * @return true caso encontre um caminho
+         * @return false caso nao encontre um caminho
+         */
+        bool backTracking(Level *level, Snake *snake, pair<int, int> position);
+
+
     public:
 
         /**
