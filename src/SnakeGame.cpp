@@ -72,7 +72,7 @@ void SnakeGame::start()
         m_ia_player = Player();
 
         m_snake = new Snake(m_levels[m_currentLevel - 1]->getStartPosition());
-        m_levels[m_currentLevel - 1]->getSpawnFruit(true);
+        m_levels[m_currentLevel - 1]->getSpawnFood(true);
     }
     else
     {
@@ -88,10 +88,15 @@ void SnakeGame::inputs()
     case WAITING_USER: // o jogo bloqueia aqui esperando o usuário digitar a escolha dele
         cin >> std::ws >> m_choice;
         // TODO IA - busca em largura
-        //m_ia_player.find_solution(m_levels[m_currentLevel - 1], m_snake, "bfs"); //* MODO BFS IA <---
+        m_ia_player.find_solution(m_levels[m_currentLevel - 1], m_snake, "bfs"); //* MODO BFS IA <---
         break;
     case WAITING_IA:
-        m_ia_player.find_solution(m_levels[m_currentLevel - 1], m_snake, "randomIA"); //* MODO RANDOM IA <---
+        // m_ia_player.find_solution(m_levels[m_currentLevel - 1], m_snake, "randomIA"); //* MODO RANDOM IA <---
+        if(m_eaten){
+            m_ia_player.clearVisited();
+            m_ia_player.find_solution(m_levels[m_currentLevel - 1], m_snake, "bfs"); //* MODO BFS IA <---
+            m_eaten = false;
+        }
         m_action = m_ia_player.next_move();
         break;
     case LEVEL_UP:
@@ -107,15 +112,18 @@ void SnakeGame::update()
     // atualiza o estado do jogo de acordo com o resultado da chamada de "process_actions"
     switch (m_state)
     {
+    case RENDERING:
+        m_state = WAITING_IA;
+        break;
     case RUNNING:
         this->processIAMove();
-        this->processFoodColision();
+        m_eaten = this->processFoodColision();
 
-        if(!m_levels[m_currentLevel - 1]->allowed(m_snake->getPosition())) // Se a posição em que a snake se moveu não for permitida
+        if (!m_levels[m_currentLevel - 1]->isPath(m_snake->getPosition())) // Se a posição em que a snake se moveu não for permitida
             m_state = LOSE_LIFE;
 
-        if(m_state == RUNNING) // se ainda form running (não pediu para esperar pelo user)
-            m_state = WAITING_IA;
+        if (m_state == RUNNING) // se ainda form running (não pediu para esperar pelo user)
+            m_state = RENDERING;
 
         break;
     case LOSE_LIFE:
@@ -129,20 +137,23 @@ void SnakeGame::update()
 
         break;
     case END_LIFES:
-        m_snake->resetAttributes(true); // Reinicia os atributos da snake
+        m_snake->resetAttributes(true);                        // Reinicia os atributos da snake
         m_snake->setPosition(m_levels[0]->getStartPosition()); // reinicia a posição da snake no nível 0
-        m_currentLevel = 1; // Reinicia  o nível
+        m_currentLevel = 1;                                    // Reinicia  o nível
 
         m_state = WAITING_USER; // Após acabar as vidas, o jogo irá perguntar se o jogador quer continuar a simulação
         break;
     case LEVEL_UP:
-        if(m_choice=="1") m_currentLevel++;
-        if(m_choice=="3") m_currentLevel = 1; // Reinicia o nível para 1
+        if (m_choice == "1")
+            m_currentLevel++;
+        if (m_choice == "3")
+            m_currentLevel = 1; // Reinicia o nível para 1
         // O caso da escolha ser 2, o nível apenas se mantém
 
-        m_snake->resetAttributes(false); // Reinicia os atributos da snake sem restaurar as vidas 
+        m_levels[m_currentLevel - 1]->getSpawnFood(true);
+        m_snake->resetAttributes(false); // Reinicia os atributos da snake sem restaurar as vidas
         m_snake->setPosition(m_levels[m_currentLevel - 1]->getStartPosition());
-        m_levels[m_currentLevel - 1]->getSpawnFruit(true);
+        m_eaten = true;
 
         m_state = WAITING_IA;
         break;
@@ -173,11 +184,33 @@ void SnakeGame::render()
     // clearScreen();
     switch (m_state)
     {
-    case RUNNING:
-        cout << "Lifes: " << m_snake->getLifes() << " | Score: 0 "
+    case RENDERING:
+        cout << endl <<"Lifes: " << m_snake->getLifes() << " | Score: 0 "
              << "| Foods Eaten: " << m_snake->getFoodsEaten() << " of "
              << m_levels[m_currentLevel - 1]->getFoods() << endl
              << endl;
+
+
+            cout << "COMANDO:";
+            if (m_action == Player::UP)
+            {
+                cout << "\033[1;36m↑ \033[0m";
+            }
+            else if (m_action == Player::LEFT)
+            {
+                cout << "\033[1;36m← \033[0m";
+            }
+            else if (m_action == Player::RIGHT)
+            {
+                cout << "\033[1;36m→ \033[0m";
+            }
+            else if (m_action == Player::DOWN)
+            {
+                cout << "\033[1;36m↓ \033[0m";
+            }
+            cout << endl;
+
+
 
         for (int i = 0; i < m_levels[m_currentLevel - 1]->getMazeSize().first; i++)
         {
@@ -186,14 +219,16 @@ void SnakeGame::render()
 
                 if (i == m_snake->getPosition().first && j == m_snake->getPosition().second)
                     cout << m_snake->getIcon();
-                else if (i == m_levels[m_currentLevel - 1]->getSpawnFruit(false).first && j == m_levels[m_currentLevel - 1]->getSpawnFruit(false).second)
-                    cout << "F";
+                else if (i == m_levels[m_currentLevel - 1]->getSpawnFood(false).first && j == m_levels[m_currentLevel - 1]->getSpawnFood(false).second)
+                    cout << "\033[31m●\033[0m";
                 else
                     cout << m_levels[m_currentLevel - 1]->getElement(i, j);
             }
             cout << endl;
         }
-        cout << "Snake Position: (" << m_snake->getPosition().first << "," << m_snake->getPosition().second << ") | Frame: " << m_frameCount << endl
+        cout << "Snake Position: (" << m_snake->getPosition().first << "," << m_snake->getPosition().second 
+             << ") | Frame: " << m_frameCount
+             << " | Food: (" << m_levels[m_currentLevel - 1]->getSpawnFood(false).first << "," << m_levels[m_currentLevel - 1]->getSpawnFood(false).second << ")"
              << endl;
         break;
     case LOSE_LIFE:
@@ -252,23 +287,23 @@ void SnakeGame::loop()
     render(); // chama um render para a interface inicial
     while (m_state != GAME_OVER)
     {
-        // cout << "\033[1;32mSTATUS\033[0m: ";
-        // if (m_state == WAITING_IA)
-        // {
-        //     cout << "Aguardando os dados da IA..." << endl;
-        // }
-        // else if(m_state == WAITING_USER)
-        // {
-        //     cout << "Aguardando os dados do usuario..." << endl;
-
-        // } else if (m_state == RUNNING){
-        //     cout << "Processando os dados e renderizando o level" << endl;
-        // }
-        inputs();  // nao executado no RUNNING
-        update();  // skipa para o render quando no WAITING_IA
-        render();  // nao executado no WAITING_IA
-        
         wait(100); // espera 1 segundo entre cada frame
+        cout << "\033[1;32mSTATUS(" << m_state << ")\033[0m: ";
+        if (m_state == WAITING_IA)
+        {
+            cout << "Aguardando os dados da IA...";
+        }
+        else if(m_state == WAITING_USER)
+        {
+            cout << "Aguardando os dados do usuario...";
+
+        } else if (m_state == RUNNING){
+            cout << "Processando os dados e renderizando o level";
+        }
+        inputs(); // nao executado no RUNNING
+        update(); // skipa para o render quando no WAITING_IA
+        render(); // nao executado no WAITING_IA
+
     }
 }
 
@@ -284,7 +319,8 @@ bool SnakeGame::hasValidLevels()
     return true;
 }
 
-void SnakeGame::processIAMove(){
+void SnakeGame::processIAMove()
+{
     if (m_action == Player::UP)
     { // UP
         m_snake->move(-1, 0);
@@ -303,13 +339,20 @@ void SnakeGame::processIAMove(){
     }
 }
 
-void SnakeGame::processFoodColision(){
-    if (m_snake->getPosition() == m_levels[m_currentLevel - 1]->getSpawnFruit(false)){ // Se o snake encostou na comida
+bool SnakeGame::processFoodColision()
+{
+    if (m_snake->getPosition() == m_levels[m_currentLevel - 1]->getSpawnFood(false))
+    { // Se o snake encostou na comida
         m_snake->eatFood();
 
-        if(m_snake->getFoodsEaten() == m_levels[m_currentLevel - 1]->getFoods()) // Se a cobra comeu todas as comidas do mapa
-            m_state = (m_currentLevel + 1 > m_levels.size())?WIN_SIMULATION:LEVEL_UP; // Se o próximo nível existe
-        else
-            m_levels[m_currentLevel - 1]->getSpawnFruit(true);            
+        if (m_snake->getFoodsEaten() == m_levels[m_currentLevel - 1]->getFoods()){
+
+            m_state = (m_currentLevel + 1 > m_levels.size()) ? WIN_SIMULATION : LEVEL_UP; // Se o próximo nível existe
+        }         // Se a cobra comeu todas as comidas do mapa
+        else{
+            m_levels[m_currentLevel - 1]->getSpawnFood(true);
+            return true;
+        }
     }
+    return false;
 }

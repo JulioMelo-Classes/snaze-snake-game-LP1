@@ -77,7 +77,7 @@ class Level{
          * 
          * @return true se o movimento for permitido, false caso contrário
          */
-        bool allowed(std::pair<int,int> pos);
+        bool isPath(std::pair<int,int> pos);
 
         /**
          * @brief Sorteia uma posição para a comida
@@ -85,7 +85,7 @@ class Level{
          * @param spawn Se já tem uma comida spawnada no mapa
          * @return pair<int, int> A posição da comida no mapa
          */
-        pair<int, int> getSpawnFruit(bool spawn);
+        pair<int, int> getSpawnFood(bool spawn);
 };
 
 #endif

@@ -45,7 +45,7 @@ void Player::randomIA(Level *level, Snake *snake)
             dir = LEFT;
         }
 
-        if (level->allowed(pos))
+        if (level->isPath(pos))
         { // Se a posição sorteada não for matar a snake
             m_moves.push_back(dir);
             hasValidMove = true; // Encontrou um movimento válido
@@ -60,7 +60,7 @@ void Player::randomIA(Level *level, Snake *snake)
 
 int Player::bfs(Level *level, Snake *snake)
 {
-    pair<int, int> startPosition = level->getStartPosition();
+    pair<int, int> startPosition = snake->getPosition();
     // UP, LEFT,RIGHT, DOWN
     int lines[] = {-1, 0, 0, 1};
     int columns[] = {0, -1, 1, 0};
@@ -71,11 +71,12 @@ int Player::bfs(Level *level, Snake *snake)
     
     Location temp = {startPosition, 0, vector<Direction>()};
     paths.push(temp);
+    pair<int,int> food = level->getSpawnFood(false);
 
     while (!paths.empty())
     {
         Location location = paths.front();
-        if (location.position == level->getSpawnFruit(false))
+        if (location.position == food)
         {
             m_moves = location.moveRegister;   // salva os movimentos quando encontra a comida
             return location.distanceFromStart; // retorna a quantidade de movimentos registrados
@@ -85,7 +86,7 @@ int Player::bfs(Level *level, Snake *snake)
         for (int i = 0; i < 4; i++)
         {
             pair<int, int> pos = make_pair(location.position.first + lines[i], location.position.second + columns[i]);
-            if (level->allowed(pos) && !m_visited[pos.first][pos.second])
+            if (level->isPath(pos) && !m_visited[pos.first][pos.second])
             {
                 m_visited[pos.first][pos.second] = true;
                 Location adjacentPosition = {pos, location.distanceFromStart + 1, location.moveRegister};
@@ -119,6 +120,7 @@ bool Player::find_solution(Level *level, Snake *snake, string mode)
 {
     // define a matriz de posicoes visitas pelo tamanho do level
     m_visited.resize(level->getMazeSize().first, vector<bool>(level->getMazeSize().second));
+    
     if (mode == "bfs")
     {
         bfs(level, snake);
@@ -129,33 +131,27 @@ bool Player::find_solution(Level *level, Snake *snake, string mode)
     }
     return false;
 }
+void Player::clearVisited(){
+    for (size_t i = 0; i < m_visited.size(); i++)
+    {
+        for (size_t j = 0; j < m_visited[i].size(); j++)
+        {
+            m_visited[i][j] = false;
+        }
+        
+    }
+}
 
 Player::Direction Player::next_move()
 {
-    //* imprime os movimentos
-    // cout << "- MOVES: ";
-    // for (size_t i = 0; i < m_moves.size(); i++)
-    // {
-    //     if (m_moves[i] == UP)
-    //     {
-    //         cout << "\033[1;36m↑ \033[0m";
-    //     }
-    //     else if (m_moves[i] == LEFT)
-    //     {
-    //         cout << "\033[1;36m← \033[0m";
-    //     }
-    //     else if (m_moves[i] == RIGHT)
-    //     {
-    //         cout << "\033[1;36m→ \033[0m";
-    //     }
-    //     else if (m_moves[i] == DOWN)
-    //     {
-    //         cout << "\033[1;36m↓ \033[0m";
-    //     }
-    // }
-    // cout << endl;
-
-    Direction acao = m_moves.front();
-    m_moves.erase(m_moves.begin());
-    return acao;
+    if(!m_moves.empty())
+    {
+        Direction acao = m_moves.front();
+        m_moves.erase(m_moves.begin());
+        return acao;
+    } else
+    {
+        cout << "IA sem movimentos";
+        return UP;
+    }
 }

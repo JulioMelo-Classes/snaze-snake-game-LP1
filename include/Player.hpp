@@ -61,6 +61,12 @@ class Player{
          * @return a próxima ação do jogador
          **/
         bool find_solution(Level *level, Snake *snake, string mode);
+
+        /**
+         * @brief limpa a matriz de posicoes visitadas
+         * 
+         */
+        void clearVisited();
         
         /**
          * Retorna a próxima ação do jogador (UP, DOWN, RIGHT ou LEFT)

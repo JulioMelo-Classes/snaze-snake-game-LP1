@@ -22,7 +22,8 @@ class SnakeGame{
             GAME_OVER, // quando o jogo deve terminar o estado é GAME_OVER
             WIN_SIMULATION, // Quando o player vence todos os níveis da simulação
             WAITING_USER, // quando o jogo deve esperar por uma entrada do usuário o estado é WAITING_USER
-            WAITING_IA // usualmente o jogo está esperando por comandos da IA, neste caso o estado é WAITING_IA
+            WAITING_IA,
+            RENDERING // usualmente o jogo está esperando por comandos da IA, neste caso o estado é WAITING_IA
         };
     private:
         Snake* m_snake;
@@ -35,6 +36,7 @@ class SnakeGame{
         string m_levels_file; // arquivo com os níveis do jogo
         Player m_ia_player; // instancia da classe Player responsável pela IA do jogo
         Player::Direction m_action; // Representa a ação escolhida pela IA
+        bool m_eaten = false; // registra se a snake comeu a comida
 
 
     public:
@@ -89,8 +91,9 @@ class SnakeGame{
         /**
          * @brief Verifica se a snake encostou em uma comida do mapa e faz as atualizações necessárias
          * 
+         * @return true se a snake enconstou na comida
          */
-        void processFoodColision();
+        bool processFoodColision();
 };
 
 #endif //SnakeGame_hpp

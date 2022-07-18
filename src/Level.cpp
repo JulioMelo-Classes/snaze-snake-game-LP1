@@ -44,7 +44,7 @@ char Level::getElement(int l, int c){
     return m_map.at(l).at(c);
 }
 
-bool Level::allowed(std::pair<int,int> pos){
+bool Level::isPath(std::pair<int,int> pos){
     if(pos.first < 0 || pos.second < 0)
         return false;
     
@@ -57,7 +57,7 @@ bool Level::allowed(std::pair<int,int> pos){
     return true;
 }
 
-pair<int, int> Level::getSpawnFruit(bool spawn){
+pair<int, int> Level::getSpawnFood(bool spawn){
     if(spawn){
         std::random_device rd;
         std::default_random_engine eng(rd());
@@ -65,9 +65,10 @@ pair<int, int> Level::getSpawnFruit(bool spawn){
         std::uniform_int_distribution<int> distrLines(0, m_lines - 1);
         std::uniform_int_distribution<int> distrColumns(0, m_columns - 1);
 
+        pair<int,int> lastPosition = m_fruitPosition;
         m_fruitPosition = make_pair(distrLines(eng), distrColumns(eng));
 
-        while(!allowed(m_fruitPosition)){
+        while(!isPath(m_fruitPosition) || lastPosition == m_fruitPosition){
             m_fruitPosition = make_pair(distrLines(eng), distrColumns(eng));
         }
 
