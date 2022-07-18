@@ -116,15 +116,15 @@ int Player::bfs(Level *level, Snake *snake)
     m_visited[startPosition.first][startPosition.second] = true; // marca a posicao como visitada
 
     queue<Location> paths; // fila com os possiveis caminhos
-    
+
     Location temp = {startPosition, 0, vector<Direction>()};
-    //cout << "REGISTRO: " << temp.position.first << " " << temp.position.second << " - "  << temp.distanceFromStart << " - " << temp.moveRegister.size() << endl;
+    // cout << "REGISTRO: " << temp.position.first << " " << temp.position.second << " - "  << temp.distanceFromStart << " - " << temp.moveRegister.size() << endl;
     paths.push(temp);
-    pair<int,int> food = level->getSpawnFood(false);
+    pair<int, int> food = level->getSpawnFood(false);
 
     while (!paths.empty())
     {
-        
+
         Location location = paths.front();
         if (location.position == food)
         {
@@ -159,7 +159,7 @@ int Player::bfs(Level *level, Snake *snake)
                 default:
                     break;
                 }
-                //cout << "REGISTRO: " << adjacentPosition.position.first << " " << adjacentPosition.position.second << " - "  << adjacentPosition.distanceFromStart << " - " << adjacentPosition.moveRegister.size() << endl;
+                cout << "REGISTRO: " << adjacentPosition.position.first << " " << adjacentPosition.position.second << " - " << adjacentPosition.distanceFromStart << " - " << adjacentPosition.moveRegister.size() << endl;
 
                 paths.push(adjacentPosition);
             }
@@ -170,9 +170,6 @@ int Player::bfs(Level *level, Snake *snake)
 
 bool Player::find_solution(Level *level, Snake *snake, string mode)
 {
-    // define a matriz de posicoes visitas pelo tamanho do level
-    m_visited.resize(level->getMazeSize().first, vector<bool>(level->getMazeSize().second));
-    
     if (mode == "bfs")
     {
         bfs(level, snake);
@@ -183,25 +180,29 @@ bool Player::find_solution(Level *level, Snake *snake, string mode)
     }
     return false;
 }
-void Player::clearVisited(){
+void Player::resetVisited(Level *level)
+{
+    // define a matriz de posicoes visitas pelo tamanho do level
+    m_visited = vector<vector<bool>>(level->getMazeSize().first, vector<bool>(level->getMazeSize().second));
+
     for (size_t i = 0; i < m_visited.size(); i++)
     {
         for (size_t j = 0; j < m_visited[i].size(); j++)
         {
             m_visited[i][j] = false;
         }
-        
     }
 }
 
 Player::Direction Player::next_move()
 {
-    if(!m_moves.empty())
+    if (!m_moves.empty())
     {
         Direction acao = m_moves.front();
         m_moves.erase(m_moves.begin());
         return acao;
-    } else
+    }
+    else
     {
         cout << "\033[1;31m(IA sem movimentos) \033[0m";
         return UP;
