@@ -60,23 +60,7 @@ void Player::randomIA(Level *level, Snake *snake)
 
 bool Player::backTracking(Level *level, Snake *snake, pair<int, int> position)
 {
-    for (size_t i = 0; i < m_visited.size(); i++)
-    {
-        for (size_t j = 0; j < m_visited[i].size(); j++)
-        {
-            if (m_visited[i][j])
-            {
-                cout << "X";
-            }
-            else
-            {
-                cout << "=";
-            }
-        }
-        cout << endl;
-    }
     m_visited[position.first][position.second] = true;
-    cout << "oi ---------------------";
     if (position == level->getSpawnFood(false))
     {
         return true;
@@ -118,7 +102,7 @@ int Player::bfs(Level *level, Snake *snake)
     queue<Location> paths; // fila com os possiveis caminhos
 
     Location temp = {startPosition, 0, vector<Direction>()};
-    // cout << "REGISTRO: " << temp.position.first << " " << temp.position.second << " - "  << temp.distanceFromStart << " - " << temp.moveRegister.size() << endl;
+    
     paths.push(temp);
     pair<int, int> food = level->getSpawnFood(false);
 
@@ -159,8 +143,7 @@ int Player::bfs(Level *level, Snake *snake)
                 default:
                     break;
                 }
-                //cout << "REGISTRO: " << adjacentPosition.position.first << " " << adjacentPosition.position.second << " - " << adjacentPosition.distanceFromStart << " - " << adjacentPosition.moveRegister.size() << endl;
-
+                
                 paths.push(adjacentPosition);
             }
         }

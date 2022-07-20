@@ -139,9 +139,6 @@ void SnakeGame::update()
     // atualiza o estado do jogo de acordo com o resultado da chamada de "process_actions"
     switch (m_state)
     {
-    case RENDERING:
-        m_state = WAITING_IA;
-        break;
     case RUNNING:
         this->processIAMove();
         m_eaten = this->processFoodColision();
@@ -150,7 +147,7 @@ void SnakeGame::update()
             m_state = LOSE_LIFE;
 
         if (m_state == RUNNING) // se ainda form running (não pediu para esperar pelo user)
-            m_state = RENDERING;
+            m_state = WAITING_IA;
 
         break;
     case LOSE_LIFE:
@@ -226,31 +223,14 @@ void SnakeGame::render()
     //clearScreen();
     switch (m_state)
     {
-    case RENDERING:
+    case RUNNING:
         cout << endl
              << "Lifes: " << m_snake->getLifes() << " | Score: 0 "
              << "| Foods Eaten: " << m_snake->getFoodsEaten() << " of "
              << m_levels[m_currentLevel - 1]->getFoods() << endl
              << endl;
 
-        cout << "COMANDO:";
-        if (m_action == Player::UP)
-        {
-            cout << "\033[1;36m↑ \033[0m";
-        }
-        else if (m_action == Player::LEFT)
-        {
-            cout << "\033[1;36m← \033[0m";
-        }
-        else if (m_action == Player::RIGHT)
-        {
-            cout << "\033[1;36m→ \033[0m";
-        }
-        else if (m_action == Player::DOWN)
-        {
-            cout << "\033[1;36m↓ \033[0m";
-        }
-        cout << endl;
+        printCurrentActionIA();
 
         for (int j = 0; j < m_levels[m_currentLevel - 1]->getMazeSize().second; j++)
         {
@@ -318,28 +298,10 @@ void SnakeGame::loop()
     render(); // chama um render para a interface inicial
     while (m_state != GAME_OVER)
     {
-        wait(100); // espera 1 segundo entre cada frame
-        cout << "\033[1;33mSTATUS(" << m_state << ")\033[0m: ";
-        if (m_state == WAITING_IA)
-        {
-            cout << "Aguardando dados da IA... ";
-        }
-        else if (m_state == WAITING_USER)
-        {
-            cout << "Aguardando dados do usuario... ";
-        }
-        else if (m_state == RUNNING)
-        {
-            cout << "Processando dados... ";
-        }
-        else if (m_state == RENDERING)
-        {
-
-            cout << "Level renderizado.";
-        }
         inputs(); // nao executado no RUNNING
         update(); // skipa para o render quando no WAITING_IA
         render(); // nao executado no WAITING_IA
+        wait(100); // espera 1 segundo entre cada frame
     }
 }
 
@@ -393,4 +355,25 @@ bool SnakeGame::processFoodColision()
         }
     }
     return false;
+}
+
+void SnakeGame::printCurrentActionIA(){
+        cout << "COMANDO:";
+        if (m_action == Player::UP)
+        {
+            cout << "\033[1;36m↑ \033[0m";
+        }
+        else if (m_action == Player::LEFT)
+        {
+            cout << "\033[1;36m← \033[0m";
+        }
+        else if (m_action == Player::RIGHT)
+        {
+            cout << "\033[1;36m→ \033[0m";
+        }
+        else if (m_action == Player::DOWN)
+        {
+            cout << "\033[1;36m↓ \033[0m";
+        }
+        cout << endl;    
 }

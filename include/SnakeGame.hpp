@@ -22,8 +22,7 @@ class SnakeGame{
             GAME_OVER, // quando o jogo deve terminar o estado é GAME_OVER
             WIN_SIMULATION, // Quando o player vence todos os níveis da simulação
             WAITING_USER, // quando o jogo deve esperar por uma entrada do usuário o estado é WAITING_USER
-            WAITING_IA,
-            RENDERING // usualmente o jogo está esperando por comandos da IA, neste caso o estado é WAITING_IA
+            WAITING_IA, // usualmente o jogo está esperando por comandos da IA, neste caso o estado é WAITING_IA
         };
     private:
         Snake* m_snake;
@@ -94,6 +93,11 @@ class SnakeGame{
          * @return true se a snake enconstou na comida
          */
         bool processFoodColision();
+
+        /**
+         * @brief Imprime a ação atual da IA de uma forma amigável
+         */
+        void printCurrentActionIA();
 };
 
 #endif //SnakeGame_hpp
