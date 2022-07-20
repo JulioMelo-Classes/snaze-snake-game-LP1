@@ -35,8 +35,6 @@ class SnakeGame{
         string m_levels_file; // arquivo com os níveis do jogo
         Player m_ia_player; // instancia da classe Player responsável pela IA do jogo
         Player::Direction m_action; // Representa a ação escolhida pela IA
-        bool m_eaten = false; // registra se a snake comeu a comida
-
 
     public:
         /**
@@ -89,10 +87,8 @@ class SnakeGame{
 
         /**
          * @brief Verifica se a snake encostou em uma comida do mapa e faz as atualizações necessárias
-         * 
-         * @return true se a snake enconstou na comida
          */
-        bool processFoodColision();
+        void processFoodColision();
 
         /**
          * @brief Imprime a ação atual da IA de uma forma amigável

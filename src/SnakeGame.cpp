@@ -111,20 +111,9 @@ void SnakeGame::inputs()
     {
     case WAITING_USER: // o jogo bloqueia aqui esperando o usuário digitar a escolha dele
         cin >> std::ws >> m_choice;
-        // TODO IA - busca em largura
-        m_ia_player.resetVisited(m_levels[m_currentLevel - 1]);                  //* MODO BFS IA <---
-        m_ia_player.find_solution(m_levels[m_currentLevel - 1], m_snake, "bfs"); //* MODO BFS IA <---
         break;
     case WAITING_IA:
-        // m_ia_player.resetVisited(m_levels[m_currentLevel - 1]); //* MODO RANDOM IA <---
-        //  m_ia_player.find_solution(m_levels[m_currentLevel - 1], m_snake, "randomIA"); //* MODO RANDOM IA <---
-        if (m_eaten)
-        {
-            m_ia_player.resetVisited(m_levels[m_currentLevel - 1]);                  //* MODO BFS IA <---
-            m_ia_player.find_solution(m_levels[m_currentLevel - 1], m_snake, "bfs"); //* MODO BFS IA <---
-            m_eaten = false;
-        }
-        m_action = m_ia_player.next_move();
+        m_action = m_ia_player.next_move(m_levels[m_currentLevel - 1], m_snake);
         break;
     case WIN_SIMULATION: case LEVEL_UP:
         cin >> std::ws >> m_choice;
@@ -141,7 +130,7 @@ void SnakeGame::update()
     {
     case RUNNING:
         this->processIAMove();
-        m_eaten = this->processFoodColision();
+        this->processFoodColision();
 
         if (!m_levels[m_currentLevel - 1]->isPath(m_snake->getPosition())) // Se a posição em que a snake se moveu não for permitida
             m_state = LOSE_LIFE;
@@ -178,7 +167,6 @@ void SnakeGame::update()
         m_levels[m_currentLevel - 1]->getSpawnFood(true);
         m_snake->resetAttributes(false); // Reinicia os atributos da snake sem restaurar as vidas
         m_snake->setPosition(m_levels[m_currentLevel - 1]->getStartPosition());
-        m_eaten = true;
 
         m_state = WAITING_IA;
         break;
@@ -188,7 +176,6 @@ void SnakeGame::update()
             m_levels[m_currentLevel - 1]->getSpawnFood(true);
             m_snake->resetAttributes(true);
             m_snake->setPosition(m_levels[m_currentLevel - 1]->getStartPosition());
-            m_eaten = true;
 
             m_state = WAITING_IA;           
         }
@@ -337,7 +324,7 @@ void SnakeGame::processIAMove()
     }
 }
 
-bool SnakeGame::processFoodColision()
+void SnakeGame::processFoodColision()
 {
     if (m_snake->getPosition() == m_levels[m_currentLevel - 1]->getSpawnFood(false))
     { // Se o snake encostou na comida
@@ -348,13 +335,10 @@ bool SnakeGame::processFoodColision()
 
             m_state = (m_currentLevel + 1 > m_levels.size()) ? WIN_SIMULATION : LEVEL_UP; // Se o próximo nível existe
         }                                                                                 // Se a cobra comeu todas as comidas do mapa
-        else
         {
             m_levels[m_currentLevel - 1]->getSpawnFood(true);
-            return true;
         }
     }
-    return false;
 }
 
 void SnakeGame::printCurrentActionIA(){

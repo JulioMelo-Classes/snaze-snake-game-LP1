@@ -177,17 +177,17 @@ void Player::resetVisited(Level *level)
     }
 }
 
-Player::Direction Player::next_move()
+Player::Direction Player::next_move(Level* level, Snake* snake)
 {
-    if (!m_moves.empty())
+    if(m_moves.empty())
     {
-        Direction acao = m_moves.front();
-        m_moves.erase(m_moves.begin());
-        return acao;
+        resetVisited(level);                  
+        find_solution(level, snake, "bfs"); //* MODO BFS IA <---
+
+        if(m_moves.empty()) find_solution(level, snake, "randomIA");
     }
-    else
-    {
-        cout << "\033[1;31m(IA sem movimentos) \033[0m";
-        return UP;
-    }
+
+    Direction acao = m_moves.front();
+    m_moves.erase(m_moves.begin());
+    return acao;
 }

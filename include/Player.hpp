@@ -82,8 +82,11 @@ class Player{
         
         /**
          * Retorna a próxima ação do jogador (UP, DOWN, RIGHT ou LEFT)
+         * 
+         * @param level Nível que está sendo jogaod
+         * @param snake snake que está jogando
          * @return a próxima ação do jogador
          **/
-        Direction next_move();
+        Direction next_move(Level* level, Snake* snake);
 };
 #endif //Player_hpp
