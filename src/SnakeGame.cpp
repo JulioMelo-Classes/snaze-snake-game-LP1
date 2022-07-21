@@ -278,6 +278,12 @@ void SnakeGame::render()
 
 void SnakeGame::game_over()
 {
+    delete m_snake; // Desaloca a snake
+
+    for(Level* level: m_levels) // Desaloca os níveis
+        delete level;
+    
+    m_levels.clear(); // Limpa o vetor de níveis
 }
 
 void SnakeGame::loop()
