@@ -12,9 +12,10 @@
 
 using namespace std;
 
-SnakeGame::SnakeGame(string levels)
+SnakeGame::SnakeGame(string levels, string iaMode)
 {
     m_levels_file = levels;
+    m_ia_player =new Player(iaMode);
     m_choice = "";
     m_frameCount = 0;
 
@@ -67,9 +68,7 @@ void SnakeGame::start()
     {
         m_state = WAITING_USER; // estado inicial é WAITING_USER, mas poderia ser outro
 
-        m_currentLevel = 1;
-
-        m_ia_player = Player();
+        m_currentLevel = 1; // Define o nível atual como o primeiro
 
         m_snake = new Snake(m_levels[m_currentLevel - 1]->getStartPosition());
         m_levels[m_currentLevel - 1]->getSpawnFood(true);
@@ -113,7 +112,7 @@ void SnakeGame::inputs()
         cin >> std::ws >> m_choice;
         break;
     case WAITING_IA:
-        m_action = m_ia_player.next_move(m_levels[m_currentLevel - 1], m_snake);
+        m_action = m_ia_player->next_move(m_levels[m_currentLevel - 1], m_snake);
         break;
     case WIN_SIMULATION: case LEVEL_UP:
         cin >> std::ws >> m_choice;
@@ -142,7 +141,6 @@ void SnakeGame::update()
     case LOSE_LIFE:
         m_snake->loseLife();                                                    // Cobra perde 1 vida
         m_snake->setPosition(m_levels[m_currentLevel - 1]->getStartPosition()); // Reinicia a posição da cobra no nível
-        m_levels[m_currentLevel -1]->getSpawnFood(true);
 
         if (m_snake->getLifes() == 0)
             m_state = END_LIFES; // Se a cobra não tiver mais vidas

@@ -6,14 +6,23 @@ using namespace std;
 int main(int argc, char *argv[]){
 
     //TODO: processar os argumentos
-    if(argc == 2){
-        string levelFile = argv[1];
+    if(argc == 4){
+        string levelFile = argv[1]; // Caminho do arquivo de nível
+        string comandIa = argv[2];
+        string iaMode = argv[3];
 
-        SnakeGame game(levelFile);
-        
-        game.loop();
+        if(comandIa == "-ia" and (iaMode == "random" or iaMode=="find")){
+            cout << "Inicializando o jogo com a IA no modo " << iaMode << "." << endl;
+
+            SnakeGame game(levelFile, iaMode);
+            game.loop();
+        }else{
+            cout << "Parâmetros de IA inválidos!" << endl;
+        }
+
     }else{
-        cout << "Argumentos inválidos para a execução do snaze! Lembre de informar o caminho do arquivo de níveis corretamente." << endl;
+        cout << "Argumentos inválidos para a execução do snaze! O comando de execução do snaze deve respeitar o seguinte padrão:" << endl;
+        cout << "./snaze <level_file> -ia [random|find]" << endl;
     }
 
     return 0;

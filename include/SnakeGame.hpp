@@ -33,14 +33,17 @@ class SnakeGame{
         string m_choice; // usado na função inputs para guardar a escolha do usuário
         GameStates m_state; // guarda o estado do jogo
         string m_levels_file; // arquivo com os níveis do jogo
-        Player m_ia_player; // instancia da classe Player responsável pela IA do jogo
+        Player* m_ia_player; // instancia da classe Player responsável pela IA do jogo
         Player::Direction m_action; // Representa a ação escolhida pela IA
 
     public:
         /**
         * @brief construtor padrão, fique à vontade para adicionar parâmetros se desejar
+        * 
+        * @param levels Caminho do arquivo de níveis
+        * @param iaMode Modo da IA no jogo (random ou find)
         **/
-        SnakeGame(string levels);
+        SnakeGame(string levels, string iaMode);
 
         /**
         * @brief chamado no main, este loop executa o jogo indefinidamente até que o usuário escolha terminar!

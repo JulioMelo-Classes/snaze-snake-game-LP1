@@ -8,6 +8,10 @@
 
 using namespace std;
 
+Player::Player(string mode){
+    m_mode = mode;
+}
+
 void Player::randomIA(Level *level, Snake *snake)
 {
     std::vector<Direction> generatedMoves = {}; // Movimentos já sorteados
@@ -56,38 +60,6 @@ void Player::randomIA(Level *level, Snake *snake)
 
     if (!hasValidMove)
         m_moves.push_back(UP); // Se não achou nenhum movimento válido escolhe qualquer um (Nesse caso, pra cima)
-}
-
-bool Player::backTracking(Level *level, Snake *snake, pair<int, int> position)
-{
-    m_visited[position.first][position.second] = true;
-    if (position == level->getSpawnFood(false))
-    {
-        return true;
-    }
-    else
-    {
-        if (level->isPath(make_pair(position.first + 1, position.second)) && !m_visited[position.first + 1][position.second])
-        {
-            backTracking(level, snake, make_pair(position.first + 1, position.second));
-        }
-
-        if (level->isPath(make_pair(position.first - 1, position.second)) && !m_visited[position.first - 1][position.second])
-        {
-            backTracking(level, snake, make_pair(position.first - 1, position.second));
-        }
-
-        if (level->isPath(make_pair(position.first, position.second + 1)) && !m_visited[position.first][position.second + 1])
-        {
-            backTracking(level, snake, make_pair(position.first, position.second + 1));
-        }
-
-        if (level->isPath(make_pair(position.first, position.second - 1)) && !m_visited[position.first][position.second - 1])
-        {
-            backTracking(level, snake, make_pair(position.first, position.second - 1));
-        }
-    }
-    return false;
 }
 
 int Player::bfs(Level *level, Snake *snake)
@@ -151,13 +123,13 @@ int Player::bfs(Level *level, Snake *snake)
     return -1; // caso a solucao nao tenha sido encontrada
 }
 
-bool Player::find_solution(Level *level, Snake *snake, string mode)
+bool Player::find_solution(Level *level, Snake *snake)
 {
-    if (mode == "bfs")
+    if (m_mode == "find")
     {
         bfs(level, snake);
     }
-    if (mode == "randomIA")
+    if (m_mode == "random")
     {
         randomIA(level, snake);
     }
@@ -182,9 +154,9 @@ Player::Direction Player::next_move(Level* level, Snake* snake)
     if(m_moves.empty())
     {
         resetVisited(level);                  
-        find_solution(level, snake, "bfs"); //* MODO BFS IA <---
+        find_solution(level, snake);
 
-        if(m_moves.empty()) find_solution(level, snake, "randomIA");
+        if(m_moves.empty()) randomIA(level, snake);
     }
 
     Direction acao = m_moves.front();

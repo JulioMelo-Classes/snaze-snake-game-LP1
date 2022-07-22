@@ -30,7 +30,7 @@ class Player{
         };
 
     private:
-
+        std::string m_mode; // Modo da IA (find ou random)
         std::vector<Direction> m_moves; // movimentos a serem exutados pelo player
         vector<vector<bool>> m_visited;//matriz com os caminhos ja visitados
 
@@ -51,28 +51,21 @@ class Player{
          */
         void randomIA(Level *level, Snake *snake); 
 
-        /**
-         * @brief metodo da IA baseado em busca em profundidade(Backtracking)
-         * 
-         * @param level faze atual
-         * @param snake a cobra
-         * @param position posicao atual
-         * @return true caso encontre um caminho
-         * @return false caso nao encontre um caminho
-         */
-        bool backTracking(Level *level, Snake *snake, pair<int, int> position);
-
-
     public:
+        /**
+         * @brief Constrói um objeto da classe Player
+         * 
+         * @param mode Modo da ia (find ou random)
+         */
+        Player(string mode);
 
         /**
          * define o conjunto de movimentos ideal para a snake com base no level atual
          * @param level fase atual
          * @param snake a snake
-         * @param mode seliciona o modelo da ia(bfs ou randomIA)
          * @return a próxima ação do jogador
          **/
-        bool find_solution(Level *level, Snake *snake, string mode);
+        bool find_solution(Level *level, Snake *snake);
 
         /**
          * @brief limpa e redimensiona a matriz de posicoes visitadas
