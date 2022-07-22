@@ -249,7 +249,7 @@ void SnakeGame::render()
         cout << "A snake colidiu e perdeu 1 vida!" << endl;
         break;
     case END_LIFES:
-        cout << "Você perdeu todas as vidas. Fim da simulação!" << endl;
+        cout << "Você perdeu todas as vidas.  GAME OVER!" << endl;
         break;
     case LEVEL_UP:
         cout << "Você completou o nível " << m_currentLevel << "." << endl;

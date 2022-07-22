@@ -15,6 +15,8 @@
 9. [Problemas da Cauda 1](#9os-problemas-da-cauda---1)
 10. [Problemas da Cauda 2](#10os-problemas-da-cauda---2)
 11. [Interface](#11interface)
+12. [Como executar o jogo](#12como-executar-o-jogo)
+13. [Demonstrando as funcionalidades](#13demonstrando-as-funcionalidades)
 
 
 # 1.Introdução 
@@ -338,3 +340,46 @@ Após pressionada uma tecla o programa inicia com a simulação até que ocorra 
 - Se o nível atual terminou (porquê acabaram as comidas), o programa deve pergutnar se o usuário quer recomeçar o mesmo mapa, passar para o próximo nível ou sair do jogo. O usuário escolhe e a simulação continua (ou encerra).
 
 Ao terminar o último mapa, o jogo deve considerar que ocorreu um game over, por isso as perguntas são as mesmas relativas ao game over.
+
+
+## 12.Como executar o jogo
+
+Para a compilação do projeto é possível utilizar a ferramenta de compilação **cmake** (Caso não possua o cmake precisará instalá-lo). Assim, siga o conjunto de passos:
+
+Crie a pasta `/build` para manter o projeto organizado quando o **cmake** buildar o projeto. Para isso, execute os comandos de dentro da pasta raiz do projeto:
+
+```bash
+mkdir build/
+cd build/
+cmake ..
+```
+
+Dessa forma, diversos arquivos do cmake serão criados dentro da pasta `/build`. 
+
+Agora execute o seguinte comando, dentro da pasta `/build` para compilar o projeto com o cmake (Os configurações de compilação já estão presentes no arquivo `CMakeLists.txt` no diretório raiz do projeto):
+
+```bash
+cmake --build . 
+```
+
+Agora, um arquivo executável será criado em `/build` com o nome de `snaze`.
+
+Em `/data` existe um conjunto de mapas arquivos de níveis padrões (`maze.txt`, `impossible.txt` e `death.txt`) que podem ser passados como parâmetro ao executar o `snaze`, assim os níveis definidos no arquivo escolhido será preparado para que seja jogado.
+
+Além disso, você pode escolher o modo da IA no momento de executar o programa utilizando `-ia`  depois do caminho do nível seguido de `random` (Para jogar o modo random) ou `find` (Para jogar o modo find).
+
+Segue abaixo um exemplo executando o `snaze` com o arquivo de nível `maze.txt` e o modo de IA `find`:
+
+```bash
+./snaze ../data/maze.txt -ia find
+```
+
+> **OBS**: Lembrando que você deve executar o comando acima dentro da pasta `./build` do projeto e que você pode trocar o arquivo de nível ou o modo da IA para random ou find.
+
+## 13.Demonstrando as funcionalidades
+
+Para os testes das funcionalidades podemos nos utilizar dos mapas que estão em `/data`. 
+
+> **OBS**: Nessa versão do projeto apenas o modo pacman está implementado
+
+### 13.1.Carremento dos níveis
