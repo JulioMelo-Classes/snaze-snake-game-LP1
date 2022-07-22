@@ -51,7 +51,7 @@ bool Level::isPath(std::pair<int,int> pos){
     if(pos.first >= m_lines || pos.second >= m_columns)
         return false;
 
-    if(m_map.at(pos.first).at(pos.second) == '#')
+    if(m_map.at(pos.first).at(pos.second) == '#' || m_map.at(pos.first).at(pos.second) == '.')
         return false;
 
     return true;
