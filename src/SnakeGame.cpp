@@ -131,6 +131,7 @@ void SnakeGame::update()
         this->processIAMove();
         this->processFoodColision();
 
+
         if (!m_levels[m_currentLevel - 1]->isPath(m_snake->getPosition())) // Se a posição em que a snake se moveu não for permitida
             m_state = LOSE_LIFE;
 
@@ -141,6 +142,8 @@ void SnakeGame::update()
     case LOSE_LIFE:
         m_snake->loseLife();                                                    // Cobra perde 1 vida
         m_snake->setPosition(m_levels[m_currentLevel - 1]->getStartPosition()); // Reinicia a posição da cobra no nível
+        m_ia_moves_count = 0;
+        m_score = 0;
 
         if (m_snake->getLifes() == 0)
             m_state = END_LIFES; // Se a cobra não tiver mais vidas
@@ -165,6 +168,8 @@ void SnakeGame::update()
         m_levels[m_currentLevel - 1]->getSpawnFood(true);
         m_snake->resetAttributes(false); // Reinicia os atributos da snake sem restaurar as vidas
         m_snake->setPosition(m_levels[m_currentLevel - 1]->getStartPosition());
+        
+        m_ia_moves_count = 0;
 
         m_state = WAITING_IA;
         break;
@@ -210,8 +215,8 @@ void SnakeGame::render()
     {
     case RUNNING:
         cout << endl
-             << "Lifes: " << m_snake->getLifes() << " | Score: 0 "
-             << "| Foods Eaten: " << m_snake->getFoodsEaten() << " of "
+             << "Lifes: " << m_snake->getLifes() << " | Score: " << m_score
+             << " | Foods Eaten: " << m_snake->getFoodsEaten() << " of "
              << m_levels[m_currentLevel - 1]->getFoods() << endl
              << endl;
 
@@ -277,6 +282,7 @@ void SnakeGame::render()
 void SnakeGame::game_over()
 {
     delete m_snake; // Desaloca a snake
+    delete m_ia_player;
 
     for(Level* level: m_levels) // Desaloca os níveis
         delete level;
@@ -310,6 +316,7 @@ bool SnakeGame::hasValidLevels()
 
 void SnakeGame::processIAMove()
 {
+    m_ia_moves_count++;
     if (m_action == Player::UP)
     { // UP
         m_snake->move(-1, 0);
@@ -333,6 +340,8 @@ void SnakeGame::processFoodColision()
     if (m_snake->getPosition() == m_levels[m_currentLevel - 1]->getSpawnFood(false))
     { // Se o snake encostou na comida
         m_snake->eatFood();
+        m_score += (25 - m_ia_moves_count <=0)? 1: 25-m_ia_moves_count;
+        m_ia_moves_count = 0;
 
         if (m_snake->getFoodsEaten() == m_levels[m_currentLevel - 1]->getFoods())
         {

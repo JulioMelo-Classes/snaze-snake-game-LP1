@@ -35,6 +35,8 @@ class SnakeGame{
         string m_levels_file; // arquivo com os níveis do jogo
         Player* m_ia_player; // instancia da classe Player responsável pela IA do jogo
         Player::Direction m_action; // Representa a ação escolhida pela IA
+        int m_ia_moves_count = 0; // Representa quantos movimentos a IA executou até chegar na última comida
+        unsigned int m_score = 0; // Score atual
 
     public:
         /**
