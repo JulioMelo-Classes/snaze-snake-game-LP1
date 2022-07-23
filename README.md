@@ -380,6 +380,54 @@ Segue abaixo um exemplo executando o `snaze` com o arquivo de nível `maze.txt` 
 
 Para os testes das funcionalidades podemos nos utilizar dos mapas que estão em `/data`. 
 
-> **OBS**: Nessa versão do projeto apenas o modo pacman está implementado
+> **OBS**: Nessa versão do projeto apenas o modo **pacman** está implementado.
 
-### 13.1.Carremento dos níveis
+### 13.1.Carremento e transição dos níveis
+
+Podemos utilizar o arquivo `maze.txt` para testar o carregamento e a transição dos níveis (Tendo em vista que no `maze.txt` existem 3 mapas). Para isso utilizemos o seguinte comando:
+
+```bash
+./snaze ../data/maze.txt -ia find
+```
+
+Você verá que o primeiro nível será renderizado e, ao comer todas as comidas do nível,  uma mensagem aparecerá perguntando se você deseja ir para o próximo nível, repetir aquele nível ou reiniciar do nível 1.
+
+### 13.2. Colisão e game over
+
+Primeiramente, vale ressaltar a condição de imortalidade do pacman em níveis normais. Para testar isso você pode executar o `snaze` com o arquivo `impossible.txt` tanto no modo random quanto no find.
+
+```bash
+./snaze ../data/impossible.txt -ia find
+```
+
+Você verá que o pacman ficará rondando de um lado para o outro mas nunca se chocará com a parede.
+
+Dessa forma, para testarmos a colisão com a parede e o game over podemos utilizar o arquivo `death.txt` que define um mapa que, independentemente da posição escolhida pela IA, a morte do pacman será causada. 
+
+```bash
+./snaze ../data/death.txt -ia find
+```
+
+> **OBS*:* Nesse caso também não importa se o modo da IA escolhido for random ou find. 
+
+Você verá que, nesse mapa, o pacman não tem para onde ir e perderá vida sempre que se mover. Cada vez que perder uma vida uma mensagem aparecerá para o jogador informando a colisão e perguntando se o mesmo deseja continuar o jogo (O que fará o nível ser reiniciado) ou se deseja parar (O que acarretará no fim da simulação).
+
+Ao perder as 5 vidas, uma mensagem de game over aparecerá. Além disso, o jogador vai poder escolher se reinicia a simulação (Do nível 1) ou deseja parar a simulação. 
+
+### 13.2 Modo random e find
+
+Tanto o modo random quanto o modo find podem ser testados com o arquivo `maze.txt`. Para testar a IA random podemos executar o `snaze` com o seguinte comando:
+
+```bash
+./snaze ../data/maze.txt -ia random
+```
+
+Assim você verá que o pacman não se moverá diretamente para a comida, mas sim ficará rondando aleatoriamente no mapa.
+
+O modo find, por sua vez, pode ser testado executando o`snaze` com o comando:
+
+```
+./snaze ../data/maze.txt -ia find
+```
+
+Nele, você perceberá que o pacman se move diretamente para a comida no mapa sempre priorizando o caminho mais curto. 
