@@ -3,6 +3,50 @@
 
 # LP1 Projeto 3 - Snaze
 
+# Avaliação e Feedback
+
+## Geral
+
+- **G1** Implementção e Uso das Classes Especificadas (ou alguma modelagem própria) | 7/10 pontos
+  - Não foi implementado alguma coisa para o snake, apenas pacman
+
+- **G2** Implementação da Interface Textual Especificada | 10/10 pontos
+
+- **G3** Implementação do Modo Pacmaze | 20/20 pontos
+
+	- *G3.1* Carregamento e transição de Níveis | 5/5 pontos
+
+	- *G3.2* Detecção de colisão e game over | 3/3 pontos
+
+	- *G3.3* Transições especificadas (repetir nivel, voltar nivel, reiniciar) | 4/4 pontos
+
+	- *G3.4* Implementação da IA modo Random | 3/3 pontos
+	
+	- *G3.5* Implementação da IA modo Find | 5/5 pontos
+
+- **G4.** Implementação do Modo Snaze | 0/15 pontos
+
+	- Não entregue
+
+## Código
+
+- **C1** Readme | 10/10 pontos
+
+- **C2**  Documentação, organização e indentação do código (obrigatório) 0 / -5 pontos
+
+- **C3** Compilação automatizada (obrigatória) 0 / -5 pontos
+
+## Extra
+
+- **E1** Modo debug 2 / 5 pontos
+  - Embora vocês não tenham implementado o modo debug proposto esse mapa deu boas ideias para versões futuras do projeto ;D
+
+## Penalizações por implementações ignorando as restrições
+
+- Observações gerais 0 / -25 pontos
+
+
+
 ### Sumário
 1. [Introdução](#1introdução)
 2. [Sobre o Jogo](#2sobre-o-jogo)
